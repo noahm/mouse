@@ -9,10 +9,11 @@
  * @license		All Rights Reserved
  * @package		Mouse Framework
  * @link		http://www.nonamestudios.com/
+ * @version		2.0
  *
 **/
 
-class mouseTransferCURL {
+class mouseTransferCurl {
 	/**
 	 * Constructor
 	 *
@@ -24,34 +25,63 @@ class mouseTransferCURL {
 	}
 
 	/**
-	 * Downloads the contents of a HTML page.
+	 * CURL wrapper for get and post functionality.
 	 *
 	 * @access	public
-	 * @param	string	HTML page to curl
-	 * @return	mixed	Raw page text/HTML or false for a 404 response.
+	 * @param	string	URL to CURL
+	 * @param	array	[Optional] Post Fields, must be an array of key => value pairs.
+	 * @param	array	[Optional] Options array('reuse' => false, 'interface' => eth1, 'useragent' => 'Custom Agent/1.0') reuse: Reuse connection for keep-alive, false by default.  interface: Physical interface to use on the hardware level.  useragent: Replace the default Mouse Framework user agent string.
+	 * @return	mixed	Raw page text/HTML or false for a 404/503 response.
 	 */
-	public function curlGet($location) {
-		$ch = curl_init();
+	public function fetch($location, $postFields = array(), $options = array()) {
+		if (!$ch) {
+			$ch = curl_init();
+		}
 		$timeout = 10;
-		$useragent = "Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.6; en-US; rv:1.9.2.3) Gecko/20100401 Firefox/3.6.13";
-		curl_setopt($ch, CURLOPT_TIMEOUT, $timeout);
-		curl_setopt($ch, CURLOPT_USERAGENT, $useragent);
-		curl_setopt($ch, CURLOPT_URL, $location);
-		curl_setopt($ch, CURLOPT_COOKIE, '');
-		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
-		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-		curl_setopt($ch, CURLOPT_MAXREDIRS, 4);
-		curl_setopt($ch, CURLOPT_COOKIEFILE, '/dev/null');
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+		if ($options['interface']) {
+			$useragent = $options['interface'];
+		} else {
+			$useragent = "Mouse Framework/".mouseHole::$version;
+		}
+
+		$dateTime = gmdate("D, d M Y H:i:s", time())." GMT";
+
+		$curl_options = array(	CURLOPT_TIMEOUT			=> $timeout,
+								CURLOPT_USERAGENT		=> $useragent,
+								CURLOPT_URL				=> $location,
+								//CURLOPT_COOKIE			=> 'int-SC2=1; perm=1; int-WOW-arenapass2011=1; int-WOW-epic-savings-promo=1',
+								CURLOPT_CONNECTTIMEOUT	=> $timeout,
+								CURLOPT_FOLLOWLOCATION	=> true,
+								CURLOPT_MAXREDIRS		=> 4,
+								CURLOPT_COOKIEFILE		=> '/tmp/curlget',
+								CURLOPT_COOKIEJAR		=> '/tmp/curlget',
+								CURLOPT_RETURNTRANSFER	=> true,
+								CURLOPT_HTTPHEADER		=> array('Date: '.$dateTime)
+							);
+
+		if (count($postFields)) {
+			$curl_options[CURLOPT_POST]			= true;
+			$curl_options[CURLOPT_POSTFEILDS]	= $postFields;
+		}
+
+		if ($options['interface']) {
+			$curl_options[CURLOPT_INTERFACE]	= $options['interface'];
+		}
+
+		curl_setopt_array($ch, $curl_options);
 
 		$page = curl_exec($ch);
 
 		$response_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-		if ($response_code == 404) {
+
+		if ($response_code == 503 or $response_code == 404) {
 			return false;
 		}
 
-		curl_close($ch);
+		if (!$options['reuse']) {
+			curl_close($ch);
+		}
 		return $page;
 	}
 }

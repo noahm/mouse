@@ -9,6 +9,7 @@
  * @license		All Rights Reserved
  * @package		Mouse Framework
  * @link		http://www.nonamestudios.com/
+ * @version		2.0
  *
 **/
 
@@ -28,14 +29,28 @@ class mouseHole {
 	public static $config;
 
 	/**
+	 * Mouse Framework Version
+	 *
+	 * @var		string
+	 */
+	public static $version = '2.0';
+
+	/**
+	 * Mouse Framework Iteration
+	 *
+	 * @var		string
+	 */
+	public static $iteration = '20000';
+
+	/**
 	 * Constructor
 	 *
 	 * @access	public
-	 * @param	array	Array of configuration options.
-	 * @param	array	Array of object keys to classes to autoload.
+	 * @param	array	[Optional] Array of configuration options.
+	 * @param	array	[Optional] Array of object keys to classes to autoload.
 	 * @return	void
 	 */
-	public function __construct($config, $classes = array()) {
+	public function __construct($config = array(), $classes = array()) {
 		//Define a constant mouse hole.
 		define('MOUSE_DIR', dirname(__FILE__));
 
@@ -81,11 +96,11 @@ class mouseHole {
 	 * Setup a new mouse() instance or return the existing instance.
 	 *
 	 * @access	public
-	 * @param	array	Array of configuration options.
-	 * @param	array	Array of object keys to classes to autoload.
+	 * @param	array	[Optional] Array of configuration options.
+	 * @param	array	[Optional] Array of object keys to classes to autoload.
 	 * @return	object	mouseHole
 	 */
-	static public function instance($config, $classes = array()) {
+	static public function instance($config = array(), $classes = array()) {
 		if (!self::$instance) {
 			self::$instance = new self($config, $classes);
 		}

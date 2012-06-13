@@ -9,6 +9,7 @@
  * @license		All Rights Reserved
  * @package		Mouse Framework
  * @link		http://www.nonamestudios.com/
+ * @version		2.0
  *
 **/
 
