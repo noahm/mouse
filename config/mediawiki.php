@@ -23,9 +23,13 @@ class mouseConfigMediawiki {
 	public function __construct($mouse) {
 		$this->config	=& mouseHole::$config;
 
-		define('MEDIAWIKI', 'WTF');
-		define('SETTINGS_ONLY', 'WTF');
-		require_once($this->config['file']);
+		if (!defined('MEDIAWIKI')) {
+			define('MEDIAWIKI', 'WTF');
+		}
+		if (!defined('SETTINGS_ONLY')) {
+			define('SETTINGS_ONLY', 'WTF');
+		}
+		require($this->config['file']);
 		$this->config['db'] = array(
 									'server'	=> $wgDBserver,
 									'port'		=> $wgDBport,
@@ -43,8 +47,9 @@ class mouseConfigMediawiki {
 		}
 
 		if ($redisCachingServers) {
-			$this->config['redis_servers']	= $redisCachingServers;
-			$this->config['use_redis']		= false;
+			$this->config['redis']['servers']	= $redisCachingServers;
+			$this->config['redis']['prefix']	= MASTER_WIKI_META;
+			$this->config['use_redis']			= true;
 		}
 	}
 }

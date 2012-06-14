@@ -62,7 +62,7 @@ class mouseTransferCurl {
 
 		if (count($postFields)) {
 			$curl_options[CURLOPT_POST]			= true;
-			$curl_options[CURLOPT_POSTFEILDS]	= $postFields;
+			$curl_options[CURLOPT_POSTFIELDS]	= $postFields;
 		}
 
 		if ($options['interface']) {
