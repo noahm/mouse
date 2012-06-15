@@ -62,7 +62,15 @@ class mouseCacheRedis {
 	 */
 	public function __call($function, $arguments) {
 		if ($this->redisInitialized) {
-			return call_user_func_array(array($this->redis, $function), $arguments);
+			try {
+				return call_user_func_array(array($this->redis, $function), $arguments);
+			} catch (Predis\Network\ConnectionException $e) {
+				$this->redisInitialized = false;
+				$this->redis = null;
+			} catch (Exception $e) {
+				$this->redisInitialized = false;
+				$this->redis = null;
+			}
 		}
 	}
 
@@ -86,6 +94,15 @@ class mouseCacheRedis {
 					$options['prefix'] = $this->config['redis']['prefix'].':';
 				}
 				$this->redis = new Predis\Client($this->config['redis']['servers'], $options);
+
+				try {
+					$this->redis->connect();
+				} catch (Predis\Network\ConnectionException $e) {
+					$this->redis = null;
+				} catch (Exception $e) {
+					$this->redis = null;
+				}
+
 				if ($this->redis) {
 					$this->redisInitialized = true;
 				}
