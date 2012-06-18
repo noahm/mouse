@@ -48,7 +48,7 @@ class mouseConfigMediawiki {
 
 		if ($redisCachingServers) {
 			$this->config['redis']['servers']	= $redisCachingServers;
-			$this->config['redis']['prefix']	= MASTER_WIKI_META;
+			$this->config['redis']['prefix']	= MASTER_WIKI_META.':';
 			$this->config['use_redis']			= true;
 		}
 	}
