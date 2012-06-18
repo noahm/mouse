@@ -2,7 +2,7 @@
 /**
  * NoName Studios
  * Mouse Framework
- * Mouse Request - Handles $_GET and $_POST variables, cleaning them, and inserting them into the request object.
+ * Mouse Request HTTP - Handles $_GET and $_POST variables, cleaning them, and inserting them into the request object.
  *
  * @author 		Alexia E. Smith
  * @copyright	(c) 2010 - 2012 NoName Studios

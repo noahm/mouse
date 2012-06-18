@@ -2,7 +2,7 @@
 /**
  * NoName Studios
  * Mouse Framework
- * Mouse Request - Handles $_GET and $_POST variables, cleaning them, and inserting them into the request object.
+ * Mouse Request CLI - Handles command line arguments, cleaning them, and inserting them into a HTTP compatible request object.
  *
  * @author 		Alexia E. Smith
  * @copyright	(c) 2010 - 2012 NoName Studios
@@ -21,6 +21,7 @@ class mouseRequestCli {
 	 * @return	void
 	 */
 	public function __construct($mouse) {
+		global $argv;
 		foreach ($argv as $key => $value) {
 			if ($key == 0) {
 				$this->script_name = $value;
@@ -45,7 +46,7 @@ class mouseRequestCli {
 	 */
 	public function setupAliases($aliases) {
 		foreach ($aliases as $key => $value) {
-			$this->get[$value] &= $this->get[$key];
+			$this->get[$value] = $this->get[$key];
 		}
 	}
 }
