@@ -39,6 +39,12 @@ class mouseConfigMediawiki {
 									);
 		$this->config['use_database'] = true;
 
+		if ($wgMetaNamespace) {
+			$this->config['wiki_meta_namespace'] = $wgMetaNamespace;
+		} else {
+			throw new Exception('MediaWiki Meta Name $wgMetaNamespace is no defined.  Class '.__CLASS__.' requires this to continue.');
+		}
+
 		if (count($wgMemCachedServers)) {
 			list($server, $port) = explode(':', $wgMemCachedServers[0]);
 			$this->config['memcache']['server']	= $server;
@@ -47,7 +53,7 @@ class mouseConfigMediawiki {
 		}
 
 		if ($redisCachingServers) {
-			$this->config['redis']['servers']	= $redisCachingServers;
+			(is_array($this->config['redis']['servers']) ? $this->config['redis']['servers'] = array_merge($this->config['redis']['servers'], $redisCachingServers) : $redisCachingServers);
 			$this->config['redis']['prefix']	= MASTER_WIKI_META.':';
 			$this->config['use_redis']			= true;
 		}

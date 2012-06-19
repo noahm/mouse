@@ -67,6 +67,9 @@ class mouseCacheRedis {
 			} catch (Predis\Network\ConnectionException $e) {
 				$this->redisInitialized = false;
 				$this->redis = null;
+			} catch (Predis\NotSupportedException $e) {
+				$this->redisInitialized = false;
+				$this->redis = null;
 			} catch (Exception $e) {
 				$this->redisInitialized = false;
 				$this->redis = null;
