@@ -310,7 +310,7 @@ class mouseDatabaseMysqli {
 		} elseif (!$query and $this->queryResult) {
 			$query = $this->queryResult;
 		}
-		return $query->fetch_array();
+		return $query->fetch_assoc();
 	}
 
 	/**
