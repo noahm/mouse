@@ -42,7 +42,7 @@ class mouseConfigMediawiki {
 		if ($wgMetaNamespace) {
 			$this->config['wiki_meta_namespace'] = $wgMetaNamespace;
 		} else {
-			throw new Exception('MediaWiki Meta Name $wgMetaNamespace is no defined.  Class '.__CLASS__.' requires this to continue.');
+			throw new Exception('MediaWiki Meta Name $wgMetaNamespace is not defined.  Class '.__CLASS__.' requires this to continue.');
 		}
 
 		if (count($wgMemCachedServers)) {
