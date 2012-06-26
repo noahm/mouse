@@ -53,7 +53,7 @@ class mouseConfigMediawiki {
 		}
 
 		if ($redisCachingServers) {
-			(is_array($this->config['redis']['servers']) ? $this->config['redis']['servers'] = array_merge($this->config['redis']['servers'], $redisCachingServers) : $redisCachingServers);
+			(is_array($this->config['redis']['servers']) ? $this->config['redis']['servers'] = array_merge($this->config['redis']['servers'], $redisCachingServers) : $this->config['redis']['servers'] = $redisCachingServers);
 			$this->config['redis']['prefix']	= MASTER_WIKI_META.':';
 			$this->config['use_redis']			= true;
 		}
