@@ -54,13 +54,26 @@ class mouseHole {
 		//Define a constant mouse hole.
 		define('MOUSE_DIR', dirname(__FILE__));
 
-		self::$config = $config;
-
 		spl_autoload_register(array(self, 'autoloadClass'), true, false);
+
+		if (count($config)) {
+			$this->loadConfig($config);
+		}
 
 		if (count($classes)) {
 			$this->loadClasses($classes);
 		}
+	}
+
+	/**
+	 * Loads and setups pointers to configuration information.
+	 *
+	 * @access	public
+	 * @param	array	Array of settings.
+	 * @return	void
+	 */
+	public function loadConfig($config = array()) {
+		self::$config = $config;
 	}
 
 	/**
