@@ -22,16 +22,18 @@ class mouseRequestCli {
 	 */
 	public function __construct($mouse) {
 		global $argv;
-		foreach ($argv as $key => $value) {
-			if ($key == 0) {
-				$this->script_name = $value;
-			} else {
-				if (is_numeric($value) AND preg_match('#[\.|\+|-|e|E]#s', $value)) {
-					$this->get[$key] = floatval($value);
-				} elseif (is_numeric($value)) {
-					$this->get[$key] = intval($value);
+		if (count($argv)) {
+			foreach ($argv as $key => $value) {
+				if ($key == 0) {
+					$this->script_name = $value;
 				} else {
-					$this->get[$key] = $value;
+					if (is_numeric($value) AND preg_match('#[\.|\+|-|e|E]#s', $value)) {
+						$this->get[$key] = floatval($value);
+					} elseif (is_numeric($value)) {
+						$this->get[$key] = intval($value);
+					} else {
+						$this->get[$key] = $value;
+					}
 				}
 			}
 		}

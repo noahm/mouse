@@ -86,7 +86,9 @@ class mouseHole {
 	public function loadClasses($classes) {
 		if (count($classes)) {
 			foreach ($classes as $key => $className) {
-				$this->$key = new $className(self);
+				if (!$this->$key instanceof $className) {
+					$this->$key = new $className(self);
+				}
 			}
 		}
 	}
