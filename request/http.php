@@ -22,22 +22,32 @@ class mouseRequestHttp {
 	 */
 	public function __construct($mouse) {
 		foreach ($_GET as $key => $value) {
-			if (is_numeric($value) AND preg_match('#[\.|\+|-|e|E]#s', $value)) {
-				$this->get[$key] = floatval($value);
-			} elseif (is_numeric($value)) {
-				$this->get[$key] = intval($value);
-			} else {
-				$this->get[$key] = $value;
-			}
+			$this->get[$key] = $this->cleanRequestValue($value);
 		}
+
 		foreach ($_POST as $key => $value) {
-			if (is_numeric($value) AND preg_match('#[\.|\+|-|e|E]#s', $value)) {
-				$this->post[$key] = floatval($value);
-			} elseif (is_numeric($value)) {
-				$this->post[$key] = intval($value);
-			} else {
-				$this->post[$key] = $value;
-			}
+			$this->post[$key] = $this->cleanRequestValue($value);
+		}
+
+		foreach ($_REQUEST as $key => $value) {
+			$this->request[$key] = $this->cleanRequestValue($value);
+		}
+	}
+
+	/**
+	 * Cleans Request Values for safe usage.
+	 *
+	 * @access	public
+	 * @param	string	Uncleaned value
+	 * @return	mixed	Cleaned value
+	 */
+	private function cleanRequestValue($value) {
+		if (is_numeric($value) AND preg_match('#[\.|\+|-|e|E]#s', $value)) {
+			return floatval($value);
+		} elseif (is_numeric($value)) {
+			return intval($value);
+		} else {
+			return $value;
 		}
 	}
 }
