@@ -120,6 +120,9 @@ class mouseHole {
 			self::$instance = new self($config, $classes);
 		}
 
+		//Reloop over provided classes to load an additional that may have been called on this pass.
+		self::$instance->loadClasses($classes);
+
 		return self::$instance;
 	}
 }

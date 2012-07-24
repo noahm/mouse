@@ -57,6 +57,9 @@ class mouseConfigMediawiki {
 			$this->config['redis']['prefix']	= MASTER_WIKI_META.':';
 			$this->config['use_redis']			= true;
 		}
+
+		$this->config['aes_key']	= $AESkey;
+		$this->config['aes_iv']		= $AESIV;
 	}
 }
 ?>
