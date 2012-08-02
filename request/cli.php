@@ -30,8 +30,8 @@ class mouseRequestCli {
 					$this->get[$key] = $this->cleanRequestValue($value);
 				}
 			}
-			$this->post = $this->get;
-			$this->request = $this->get;
+			$this->post		= $this->get;
+			$this->request	= $this->get;
 		}
 	}
 
@@ -61,7 +61,9 @@ class mouseRequestCli {
 	 */
 	public function setupAliases($aliases) {
 		foreach ($aliases as $key => $value) {
-			$this->get[$value] = $this->get[$key];
+			$this->get[$value]		= $this->get[$key];
+			$this->post[$value]		= $this->post[$key];
+			$this->request[$value]	= $this->request[$key];
 		}
 	}
 }
