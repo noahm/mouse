@@ -30,8 +30,8 @@ class mouseRequestCli {
 					$this->get[$key] = $this->cleanRequestValue($value);
 				}
 			}
-			$this->post &= $this->get;
-			$this->request &= $this->get;
+			$this->post = $this->get;
+			$this->request = $this->get;
 		}
 	}
 
