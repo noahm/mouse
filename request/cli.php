@@ -27,15 +27,28 @@ class mouseRequestCli {
 				if ($key == 0) {
 					$this->script_name = $value;
 				} else {
-					if (is_numeric($value) AND preg_match('#[\.|\+|-|e|E]#s', $value)) {
-						$this->get[$key] = floatval($value);
-					} elseif (is_numeric($value)) {
-						$this->get[$key] = intval($value);
-					} else {
-						$this->get[$key] = $value;
-					}
+					$this->get[$key] = $this->cleanRequestValue($value);
 				}
 			}
+			$this->post &= $this->get;
+			$this->request &= $this->get;
+		}
+	}
+
+	/**
+	 * Cleans Request Values for safe usage.
+	 *
+	 * @access	public
+	 * @param	string	Uncleaned value
+	 * @return	mixed	Cleaned value
+	 */
+	private function cleanRequestValue($value) {
+		if (is_numeric($value) AND preg_match('#[\.|\+|-|e|E]#s', $value)) {
+			return floatval($value);
+		} elseif (is_numeric($value)) {
+			return intval($value);
+		} else {
+			return $value;
 		}
 	}
 
