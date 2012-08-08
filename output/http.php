@@ -13,7 +13,7 @@
  *
 **/
 
-class mouseOutputCli {
+class mouseOutputHttp {
 	/**
 	 * Output HTML
 	 *
@@ -53,7 +53,6 @@ class mouseOutputCli {
 		}
 
 		$file = "{$this->templateFolder}/{$skinClass}.php";
-		var_dump($file);
 		if (is_file($file)) {
 			try {
 				include_once($file);
