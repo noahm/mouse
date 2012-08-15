@@ -22,13 +22,22 @@ class mouseDatabaseMysqli {
 	private $mysqli;
 
 	/**
+	 * Object Key
+	 *
+	 * @var		object
+	 */
+	public $objectKey;
+
+	/**
 	 * Constructor
 	 *
 	 * @access	public
+	 * @param	[Optional] Object key used to initialize the object to mouse.  Also servers as the configuration array key.
 	 * @return	void
 	 */
-	public function __construct($mouse) {
-		$this->config	=& mouseHole::$config;
+	public function __construct($objectKey = 'DB') {
+		$this->objectKey	= $objectKey;
+		$this->config		=& mouseHole::$config[$this->objectKey];
 
 		//Automatic enable.
 		if ($this->config['use_database']) {
@@ -36,7 +45,6 @@ class mouseDatabaseMysqli {
 		} else {
 			$this->enabled	= false;
 		}
-
 	}
 
 	/**
@@ -46,10 +54,10 @@ class mouseDatabaseMysqli {
 	 * @return	void
 	 */
 	public function init() {
-		if (intval($this->config['db']['port']) > 0) {
-			$this->config['db']['server'] = $this->config['db']['server'].':'.intval($this->config['db']['port']);
+		if (intval($this->config['port']) > 0) {
+			$this->config['server'] = $this->config['server'].':'.intval($this->config['port']);
 		}
-		$this->connect($this->config['db']['server'], $this->config['db']['user'], $this->config['db']['pass'], $this->config['db']['database']);
+		$this->connect($this->config['server'], $this->config['user'], $this->config['pass'], $this->config['database']);
 		$this->query("SET NAMES utf8");
 		return true;
 	}
@@ -189,7 +197,7 @@ class mouseDatabaseMysqli {
 	 * @return	boolean
 	 */
 	public function insert($table, $data = array()) {
-		$table = $this->config['db']['prefix'].$table;
+		$table = $this->config['prefix'].$table;
 
 		foreach ($data as $field => $value) {
 			if (is_numeric($value) and !is_infinite($value)) {
@@ -220,7 +228,7 @@ class mouseDatabaseMysqli {
 	 * @return	boolean
 	 */
 	public function update($table, $data = array(), $where = false) {
-		$table = $this->config['db']['prefix'].$table;
+		$table = $this->config['prefix'].$table;
 
 		foreach ($data as $field => $value) {
 			if (is_numeric($value) and !is_infinite($value)) {
@@ -253,7 +261,7 @@ class mouseDatabaseMysqli {
 	 * @return	boolean
 	 */
 	public function delete($table, $where = false) {
-		$table = $this->config['db']['prefix'].$table;
+		$table = $this->config['prefix'].$table;
 
 		$query = 'DELETE FROM '.$table;
 
@@ -351,11 +359,11 @@ class mouseDatabaseMysqli {
 	private function buildFrom($from) {
 		if (is_array($from)) {
 			foreach ($from as $table => $alias) {
-				$froms[] = $this->config['db']['prefix'].$table.' AS '.$alias;
+				$froms[] = $this->config['prefix'].$table.' AS '.$alias;
 			}
 			return implode(', ', $froms);
 		} else {
-			return $this->config['db']['prefix'].$from;
+			return $this->config['prefix'].$from;
 		}
 	}
 }

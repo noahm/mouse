@@ -15,12 +15,23 @@
 
 class mouseRequestHttp {
 	/**
+	 * Object Key
+	 *
+	 * @var		object
+	 */
+	public $objectKey;
+
+	/**
 	 * Constructor
 	 *
 	 * @access	public
+	 * @param	[Optional] Object key used to initialize the object to mouse.  Also servers as the configuration array key.
 	 * @return	void
 	 */
-	public function __construct($mouse) {
+	public function __construct($objectKey = 'http') {
+		$this->objectKey	= $objectKey;
+		$this->config		=& mouseHole::$config[$this->objectKey];
+
 		foreach ($_GET as $key => $value) {
 			$this->get[$key] = $this->cleanRequestValue($value);
 		}

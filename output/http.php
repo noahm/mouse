@@ -29,13 +29,22 @@ class mouseOutputHttp {
 	protected $templateFolder;
 
 	/**
+	 * Object Key
+	 *
+	 * @var		object
+	 */
+	public $objectKey;
+
+	/**
 	 * Constructor
 	 *
 	 * @access	public
+	 * @param	[Optional] Object key used to initialize the object to mouse.  Also servers as the configuration array key.
 	 * @return	void
 	 */
-	public function __construct($mouse) {
-		$this->config	=& mouseHole::$config;
+	public function __construct($objectKey = 'http') {
+		$this->objectKey	= $objectKey;
+		$this->config		=& mouseHole::$config[$this->objectKey];
 	}
 
 	/**

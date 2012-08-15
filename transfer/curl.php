@@ -15,13 +15,22 @@
 
 class mouseTransferCurl {
 	/**
+	 * Object Key
+	 *
+	 * @var		object
+	 */
+	public $objectKey;
+
+	/**
 	 * Constructor
 	 *
 	 * @access	public
+	 * @param	[Optional] Object key used to initialize the object to mouse.  Also servers as the configuration array key.
 	 * @return	void
 	 */
-	public function __construct($mouse) {
-		$this->config	=& mouseHole::$config;
+	public function __construct($objectKey = 'curl') {
+		$this->objectKey	= $objectKey;
+		$this->config		=& mouseHole::$config[$this->objectKey];
 	}
 
 	/**
@@ -39,8 +48,8 @@ class mouseTransferCurl {
 		}
 		$timeout = 10;
 
-		if ($options['interface']) {
-			$useragent = $options['interface'];
+		if ($this->config['useragent']) {
+			$useragent = $this->config['useragent'];
 		} else {
 			$useragent = "Mouse Framework/".mouseHole::$version;
 		}
@@ -50,7 +59,6 @@ class mouseTransferCurl {
 		$curl_options = array(	CURLOPT_TIMEOUT			=> $timeout,
 								CURLOPT_USERAGENT		=> $useragent,
 								CURLOPT_URL				=> $location,
-								//CURLOPT_COOKIE			=> 'int-SC2=1; perm=1; int-WOW-arenapass2011=1; int-WOW-epic-savings-promo=1',
 								CURLOPT_CONNECTTIMEOUT	=> $timeout,
 								CURLOPT_FOLLOWLOCATION	=> true,
 								CURLOPT_MAXREDIRS		=> 4,
@@ -65,8 +73,8 @@ class mouseTransferCurl {
 			$curl_options[CURLOPT_POSTFIELDS]	= $postFields;
 		}
 
-		if ($options['interface']) {
-			$curl_options[CURLOPT_INTERFACE]	= $options['interface'];
+		if ($this->config['interface']) {
+			$curl_options[CURLOPT_INTERFACE]	= $this->config['interface'];
 		}
 
 		curl_setopt_array($ch, $curl_options);

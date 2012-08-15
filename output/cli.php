@@ -22,13 +22,22 @@ class mouseOutputCli {
 	private static $buffer = array();
 
 	/**
+	 * Object Key
+	 *
+	 * @var		object
+	 */
+	public $objectKey;
+
+	/**
 	 * Constructor
 	 *
 	 * @access	public
+	 * @param	[Optional] Object key used to initialize the object to mouse.  Also servers as the configuration array key.
 	 * @return	void
 	 */
-	public function __construct($mouse) {
-		$this->config	=& mouseHole::$config;
+	public function __construct($objectKey = 'cli') {
+		$this->objectKey	= $objectKey;
+		$this->config		=& mouseHole::$config[$this->objectKey];
 	}
 
 	/**
@@ -39,8 +48,9 @@ class mouseOutputCli {
 	 * @return	void
 	 */
 	public function send($text = null) {
-		if ($logging) {
-			$this->log->write($text);
+		if ($this->config['logging']) {
+			//Log Writer Not Yet Implemented
+			//$this->log->write($text);
 		}
 
 		if (count(self::$buffer)) {

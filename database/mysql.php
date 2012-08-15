@@ -14,16 +14,30 @@
 **/
 
 class mouseDatabaseMysql {
-	private $db_link;
+	/**
+	 * MySQL Link
+	 *
+	 * @var		object
+	 */
+	private $mysql;
+
+	/**
+	 * Object Key
+	 *
+	 * @var		object
+	 */
+	public $objectKey;
 
 	/**
 	 * Constructor
 	 *
 	 * @access	public
+	 * @param	[Optional] Object key used to initialize the object to mouse.  Also servers as the configuration array key.
 	 * @return	void
 	 */
-	public function __construct($mouse) {
-		$this->config	=& mouseHole::$config;
+	public function __construct($objectKey = 'DB') {
+		$this->objectKey	= $objectKey;
+		$this->config		=& mouseHole::$config[$this->objectKey];
 
 		//Automatic enable.
 		if ($this->config['use_database']) {
@@ -31,7 +45,6 @@ class mouseDatabaseMysql {
 		} else {
 			$this->enabled	= false;
 		}
-
 	}
 
 	/**
@@ -41,11 +54,11 @@ class mouseDatabaseMysql {
 	 * @return	void
 	 */
 	public function init() {
-		if (intval($this->config['db']['port']) > 0) {
-			$this->config['db']['server'] = $this->config['db']['server'].':'.intval($this->config['db']['port']);
+		if (intval($this->config['port']) > 0) {
+			$this->config['server'] = $this->config['server'].':'.intval($this->config['port']);
 		}
-		$this->connect($this->config['db']['server'], $this->config['db']['user'], $this->config['db']['pass']);
-		$this->selectDatabase($this->config['db']['database']);
+		$this->connect($this->config['server'], $this->config['user'], $this->config['pass']);
+		$this->selectDatabase($this->config['database']);
 		$this->query("SET NAMES utf8");
 		return true;
 	}
@@ -60,8 +73,8 @@ class mouseDatabaseMysql {
 	 * @return	void
 	 */
 	public function connect($server, $user, $pass) {
-		$this->db_link = @mysql_connect($server, $user, $pass, true);
-		if (!$this->db_link) {
+		$this->mysql = @mysql_connect($server, $user, $pass, true);
+		if (!$this->mysql) {
 			$this->dbError();
 		}
 	}
@@ -74,7 +87,7 @@ class mouseDatabaseMysql {
 	 * @return	void
 	 */
 	public function selectDatabase($database) {
-		if (!mysql_select_db($database, $this->db_link)) {
+		if (!mysql_select_db($database, $this->mysql)) {
 			$this->dbError();
 		}
 	}
@@ -158,7 +171,7 @@ class mouseDatabaseMysql {
 	 * @return	integer
 	 */
 	public function getInsertID() {
-		return mysql_insert_id($this->db_link);
+		return mysql_insert_id($this->mysql);
 	}
 
 	/**
@@ -181,7 +194,7 @@ class mouseDatabaseMysql {
 	 * @return	boolean
 	 */
 	public function insert($table, $data = array()) {
-		$table = $this->config['db']['prefix'].$table;
+		$table = $this->config['prefix'].$table;
 		
 		foreach ($data as $field => $value) {
 			if (is_numeric($value) and !is_infinite($value)) {
@@ -212,7 +225,7 @@ class mouseDatabaseMysql {
 	 * @return	boolean
 	 */
 	public function update($table, $data = array(), $where = false) {
-		$table = $this->config['db']['prefix'].$table;
+		$table = $this->config['prefix'].$table;
 		
 		foreach ($data as $field => $value) {
 			if (is_numeric($value) and !is_infinite($value)) {
@@ -245,7 +258,7 @@ class mouseDatabaseMysql {
 	 * @return	boolean
 	 */
 	public function delete($table, $where = false) {
-		$table = $this->config['db']['prefix'].$table;
+		$table = $this->config['prefix'].$table;
 
 		$query = 'DELETE FROM '.$table;
 
@@ -271,7 +284,7 @@ class mouseDatabaseMysql {
 	 * @return	string	Escaped value
 	 */
 	public function escapeString($value) {
-		return mysql_real_escape_string($value, $this->db_link);
+		return mysql_real_escape_string($value, $this->mysql);
 	}
 
 	/**
@@ -282,7 +295,7 @@ class mouseDatabaseMysql {
 	 * @return	mixed
 	 */
 	public function query($query) {
-		$result = mysql_query($query, $this->db_link);
+		$result = mysql_query($query, $this->mysql);
 		if (is_resource($result)) {
 			$this->queryResult = $result;
 		}
@@ -319,11 +332,11 @@ class mouseDatabaseMysql {
 	private function buildFrom($from) {
 		if (is_array($from)) {
 			foreach ($from as $table => $alias) {
-				$froms[] = $this->config['db']['prefix'].$table.' AS '.$alias;
+				$froms[] = $this->config['prefix'].$table.' AS '.$alias;
 			}
 			return implode(', ', $froms);
 		} else {
-			return $this->config['db']['prefix'].$from;
+			return $this->config['prefix'].$from;
 		}
 	}
 }

@@ -40,7 +40,7 @@ class mouseHole {
 	 *
 	 * @var		string
 	 */
-	public static $iteration = '20005';
+	public static $iteration = '20007';
 
 	/**
 	 * Constructor
@@ -87,7 +87,7 @@ class mouseHole {
 		if (count($classes)) {
 			foreach ($classes as $key => $className) {
 				if (!$this->$key instanceof $className) {
-					$this->$key = new $className(self);
+					$this->$key = new $className($key);
 				}
 			}
 		}
