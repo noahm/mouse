@@ -29,6 +29,7 @@ class mouseConfigMediawiki {
 	 * @return	void
 	 */
 	public function __construct($objectKey = 'mediawiki') {
+		//This Mediawiki configuration object is a prototype bridge between a Mediawiki LocalSettings.php file and the immature mouse configuration concept.
 		$this->objectKey	= $objectKey;
 		$this->config		=& mouseHole::$config[$this->objectKey];
 
