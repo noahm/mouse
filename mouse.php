@@ -50,23 +50,33 @@ class mouseHole {
 	 * @param	array	[Optional] Array of object keys to classes to autoload.
 	 * @return	void
 	 */
-	public function __construct($config = array(), $classes = array()) {
+	private function __construct($classes = array(), $config = array()) {
 		//Define a constant mouse hole.
 		define('MOUSE_DIR', dirname(__FILE__));
 
 		spl_autoload_register(array(self, 'autoloadClass'), true, false);
 
-		if (count($config)) {
-			$this->loadConfig($config);
-		}
-
 		if (count($classes)) {
 			$this->loadClasses($classes);
+		}
+
+		if (count($config)) {
+			$this->loadConfig($config);
 		}
 	}
 
 	/**
-	 * Loads and setups pointers to configuration information.
+	 * Clone - No Clones Allowed
+	 *
+	 * @access	public
+	 * @return	void
+	 */
+	private function __clone() {
+		//"We've had cloning in the South for years. It's called cousins." --Robin Williams, actor
+	}
+
+	/**
+	 * Loads and sets up pointers to configuration information.
 	 *
 	 * @access	public
 	 * @param	array	Array of settings.
@@ -115,13 +125,13 @@ class mouseHole {
 	 * @param	array	[Optional] Array of object keys to classes to autoload.
 	 * @return	object	mouseHole
 	 */
-	static public function instance($config = array(), $classes = array()) {
+	static public function instance($classes = array(), $config = array()) {
 		if (!self::$instance) {
-			self::$instance = new self($config, $classes);
+			self::$instance = new self($classes, $config);
+		} else {
+			//Reloop over provided classes to load an additional that may have been called on this pass.
+			self::$instance->loadClasses($classes);
 		}
-
-		//Reloop over provided classes to load an additional that may have been called on this pass.
-		self::$instance->loadClasses($classes);
 
 		return self::$instance;
 	}
