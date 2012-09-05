@@ -26,7 +26,7 @@ class mouseHole {
 	 *
 	 * @var		array
 	 */
-	public static $config;
+	public static $config = array();
 
 	/**
 	 * Mouse Framework Version
@@ -56,12 +56,13 @@ class mouseHole {
 
 		spl_autoload_register(array(self, 'autoloadClass'), true, false);
 
-		if (count($classes)) {
-			$this->loadClasses($classes);
-		}
-
+		//Always load configuration first.  Some classes require configuration to be passed in first for successful setup.
 		if (count($config)) {
 			$this->loadConfig($config);
+		}
+
+		if (count($classes)) {
+			$this->loadClasses($classes);
 		}
 	}
 
@@ -83,7 +84,7 @@ class mouseHole {
 	 * @return	void
 	 */
 	public function loadConfig($config = array()) {
-		self::$config = $config;
+		self::$config = array_merge(self::$config, $config);
 	}
 
 	/**
@@ -129,6 +130,8 @@ class mouseHole {
 		if (!self::$instance) {
 			self::$instance = new self($classes, $config);
 		} else {
+			//Always load configuration first.  Some classes require configuration to be passed in first for successful setup.
+			self::$instance->loadConfig($config);
 			//Reloop over provided classes to load an additional that may have been called on this pass.
 			self::$instance->loadClasses($classes);
 		}
