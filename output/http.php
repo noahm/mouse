@@ -78,6 +78,16 @@ class mouseOutputHttp {
 	 * Template Loader
 	 *
 	 * @access	public
+	 * @return	string	Current template folder.
+	 */
+	public function getTemplateFolder() {
+		return $this->templateFolder;
+	}
+
+	/**
+	 * Set Template Folder
+	 *
+	 * @access	public
 	 * @param	string	Complete folder path to where skins are stored for this object instance.
 	 * @return	boolean	Success
 	 */
