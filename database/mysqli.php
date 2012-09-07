@@ -233,6 +233,8 @@ class mouseDatabaseMysqli {
 		foreach ($data as $field => $value) {
 			if (is_numeric($value) and !is_infinite($value)) {
 				$set[] = $field.' = '.floatval($value);
+			} elseif ($value === null) {
+				$set[] = $field." = NULL";
 			} else {
 				$set[] = $field." = '".$this->escapeString($value)."'";
 			}
