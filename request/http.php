@@ -57,6 +57,11 @@ class mouseRequestHttp {
 			return floatval($value);
 		} elseif (is_numeric($value)) {
 			return intval($value);
+		} elseif (is_array($value) and count($value)) {
+			foreach ($value as $subvalue) {
+				$array[] = $this->cleanRequestValue($subvalue);
+			}
+			return $array;
 		} else {
 			return $value;
 		}
