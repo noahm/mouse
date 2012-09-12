@@ -84,7 +84,13 @@ class mouseHole {
 	 * @return	void
 	 */
 	public function loadConfig($config = array()) {
-		self::$config = array_merge(self::$config, $config);
+		if (!is_array(self::$config)) {
+			//Reseting the config if it gets messed up.
+			self::$config = array();
+		}
+		if ($config and is_array($config)) {
+			self::$config = array_merge(self::$config, $config);
+		}
 	}
 
 	/**
