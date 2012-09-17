@@ -346,8 +346,8 @@ class mouseDatabaseMysqli {
 	 * @return	void	Throws Exception
 	 */
 	public function dbError() {
-		$errno = ($this->mysql->connect_errno ? $this->mysql->connect_errno : $this->mysql->errno);
-		$error = ($this->mysql->connect_error ? $this->mysql->connect_error : $this->mysql->error);
+		$errno = ($this->mysqli->connect_errno ? $this->mysqli->connect_errno : $this->mysqli->errno);
+		$error = ($this->mysqli->connect_error ? $this->mysqli->connect_error : $this->mysqli->error);
 		throw new Exception('['.$errno.'] '.$error."\n".(PHP_SAPI == 'cli' ? $this->generatedQuery."\n" : ''));
 	}
 
