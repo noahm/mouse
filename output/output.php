@@ -13,7 +13,7 @@
  *
 **/
 
-class mouseOutputHttp {
+class mouseOutputOutput {
 	/**
 	 * Output HTML
 	 *
@@ -133,6 +133,42 @@ class mouseOutputHttp {
 	 */
 	public function sendOutput() {
 		echo $this->content;
+	}
+
+	/**
+	 * Sends provided string to CLI appended to existing add() buffer.  Automatically sets up line breaks.
+	 *
+	 * @access	public
+	 * @param	string	[Optional] Text to send.
+	 * @return	void
+	 */
+	public function sendLine($text = null) {
+		if ($this->config['logging']) {
+			//Log Writer Not Yet Implemented
+			//$this->log->write($text);
+		}
+
+		if (count(self::$buffer)) {
+			foreach (self::$buffer as $string) {
+				echo $string."\n";
+			}
+			self::$buffer = array();
+		}
+
+		if ($text !== null) {
+			echo $text."\n";
+		}
+	}
+
+	/**
+	 * Adds provided text to line buffer.  Calling add() with no text will add a blank line.
+	 *
+	 * @access	public
+	 * @param	string	[Optional] Text to add.
+	 * @return	void
+	 */
+	public function addLine($text = '') {
+		self::$buffer[] = $text;
 	}
 
 	/**
