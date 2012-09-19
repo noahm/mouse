@@ -111,7 +111,7 @@ class mouseHole {
 		if (count($classes)) {
 			foreach ($classes as $key => $className) {
 				if (in_array($key, self::$reservedKeys)) {
-					throw new Exception("Mouse modules can not be assigned to certain reserved key words.  Attempted to load: {$key} => {$className}"));
+					throw new Exception("Mouse modules can not be assigned to certain reserved key words.  Attempted to load: {$key} => {$className}");
 				}
 				if (!$this->$key instanceof $className) {
 					$this->$key = new $className($key);
