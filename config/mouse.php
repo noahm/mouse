@@ -25,7 +25,7 @@ class mouseConfigMouse {
 	 * Constructor
 	 *
 	 * @access	public
-	 * @param	[Optional] Object key used to initialize the object to mouse.  Also servers as the configuration array key.
+	 * @param	[Optional] Object key used to initialize the object to mouse.  Also serves as the settings array key.
 	 * @return	void
 	 */
 	public function __construct($objectKey = 'config') {

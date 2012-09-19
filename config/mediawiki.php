@@ -25,13 +25,13 @@ class mouseConfigMediawiki {
 	 * Constructor
 	 *
 	 * @access	public
-	 * @param	[Optional] Object key used to initialize the object to mouse.  Also servers as the configuration array key.
+	 * @param	[Optional] Object key used to initialize the object to mouse.  Also serves as the settings array key.
 	 * @return	void
 	 */
 	public function __construct($objectKey = 'mediawiki') {
 		//This Mediawiki configuration object is a prototype bridge between a Mediawiki LocalSettings.php file and the immature mouse configuration concept.
 		$this->objectKey	= $objectKey;
-		$this->config		=& mouseHole::$config[$this->objectKey];
+		$this->settings		=& mouseHole::$settings[$this->objectKey];
 
 		if (!defined('MEDIAWIKI')) {
 			define('MEDIAWIKI', 'WTF');
@@ -39,8 +39,8 @@ class mouseConfigMediawiki {
 		if (!defined('SETTINGS_ONLY')) {
 			define('SETTINGS_ONLY', 'WTF');
 		}
-		require(mouseHole::$config['file']);
-		mouseHole::$config['DB'] = array(
+		require(mouseHole::$settings['file']);
+		mouseHole::$settings['DB'] = array(
 											'server'		=> $wgDBserver,
 											'port'			=> $wgDBport,
 											'database'		=> $wgDBname,
@@ -50,26 +50,26 @@ class mouseConfigMediawiki {
 										);
 
 		if ($wgMetaNamespace) {
-			mouseHole::$config['wiki_meta_namespace'] = $wgMetaNamespace;
+			mouseHole::$settings['wiki_meta_namespace'] = $wgMetaNamespace;
 		} else {
 			throw new Exception('MediaWiki Meta Name $wgMetaNamespace is not defined.  Class '.__CLASS__.' requires this to continue.');
 		}
 
 		if (count($wgMemCachedServers)) {
 			list($server, $port) = explode(':', $wgMemCachedServers[0]);
-			mouseHole::$config['memcache']['server']		= $server;
-			mouseHole::$config['memcache']['port']			= $port;
-			mouseHole::$config['memcache']['use_memcache']	= true;
+			mouseHole::$settings['memcache']['server']			= $server;
+			mouseHole::$settings['memcache']['port']			= $port;
+			mouseHole::$settings['memcache']['use_memcache']	= true;
 		}
 
 		if ($redisCachingServers) {
-			(is_array(mouseHole::$config['redis']['servers']) ? mouseHole::$config['redis']['servers'] = array_merge(mouseHole::$config['redis']['servers'], $redisCachingServers) : mouseHole::$config['redis']['servers'] = $redisCachingServers);
-			mouseHole::$config['redis']['prefix']		= MASTER_WIKI_META.':';
-			mouseHole::$config['redis']['use_redis']	= true;
+			(is_array(mouseHole::$settings['redis']['servers']) ? mouseHole::$settings['redis']['servers'] = array_merge(mouseHole::$settings['redis']['servers'], $redisCachingServers) : mouseHole::$settings['redis']['servers'] = $redisCachingServers);
+			mouseHole::$settings['redis']['prefix']		= MASTER_WIKI_META.':';
+			mouseHole::$settings['redis']['use_redis']	= true;
 		}
 
-		mouseHole::$config['aes_key']	= $AESkey;
-		mouseHole::$config['aes_iv']	= $AESIV;
+		mouseHole::$settings['aes_key']	= $AESkey;
+		mouseHole::$settings['aes_iv']	= $AESIV;
 	}
 }
 ?>

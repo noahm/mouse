@@ -2,7 +2,7 @@
 /**
  * NoName Studios
  * Mouse Framework
- * Mouse Output HTTP - Screen output to a HTTP based interface.
+ * Mouse Output Output - Screen output to HTTP and CLI based interfaces.
  *
  * @author 		Alexia E. Smith
  * @copyright	(c) 2010 - 2012 NoName Studios
@@ -22,6 +22,13 @@ class mouseOutputOutput {
 	private $content;
 
 	/**
+	 * Output Line Buffer
+	 *
+	 * @var		array
+	 */
+	static private $lineBuffer;
+
+	/**
 	 * Template Folder Location
 	 *
 	 * @var		string
@@ -39,12 +46,12 @@ class mouseOutputOutput {
 	 * Constructor
 	 *
 	 * @access	public
-	 * @param	[Optional] Object key used to initialize the object to mouse.  Also servers as the configuration array key.
+	 * @param	[Optional] Object key used to initialize the object to mouse.  Also serves as the settings array key.
 	 * @return	void
 	 */
 	public function __construct($objectKey = 'http') {
 		$this->objectKey	= $objectKey;
-		$this->config		=& mouseHole::$config[$this->objectKey];
+		$this->settings		=& mouseHole::$settings[$this->objectKey];
 	}
 
 	/**
@@ -136,23 +143,23 @@ class mouseOutputOutput {
 	}
 
 	/**
-	 * Sends provided string to CLI appended to existing add() buffer.  Automatically sets up line breaks.
+	 * Sends provided string to CLI appended to existing addLine() buffer.  Automatically sets up line breaks.
 	 *
 	 * @access	public
 	 * @param	string	[Optional] Text to send.
 	 * @return	void
 	 */
 	public function sendLine($text = null) {
-		if ($this->config['logging']) {
+		if ($this->settings['logging']) {
 			//Log Writer Not Yet Implemented
 			//$this->log->write($text);
 		}
 
-		if (count(self::$buffer)) {
-			foreach (self::$buffer as $string) {
+		if (count(self::$lineBuffer)) {
+			foreach (self::$lineBuffer as $string) {
 				echo $string."\n";
 			}
-			self::$buffer = array();
+			self::$lineBuffer = array();
 		}
 
 		if ($text !== null) {
@@ -168,7 +175,7 @@ class mouseOutputOutput {
 	 * @return	void
 	 */
 	public function addLine($text = '') {
-		self::$buffer[] = $text;
+		self::$lineBuffer[] = $text;
 	}
 
 	/**

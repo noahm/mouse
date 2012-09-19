@@ -46,15 +46,15 @@ class mouseCacheRedis {
 	 * Constructor
 	 *
 	 * @access	public
-	 * @param	[Optional] Object key used to initialize the object to mouse.  Also servers as the configuration array key.
+	 * @param	[Optional] Object key used to initialize the object to mouse.  Also serves as the settings array key.
 	 * @return	void
 	 */
 	public function __construct($objectKey = 'redis') {
 		$this->objectKey	= $objectKey;
-		$this->config		=& mouseHole::$config[$this->objectKey];
+		$this->settings		=& mouseHole::$settings[$this->objectKey];
 
 		//Automatic enable.
-		if ($this->config['use_redis']) {
+		if ($this->settings['use_redis']) {
 			$this->enabled	= $this->init();
 		} else {
 			$this->enabled	= false;
@@ -97,15 +97,15 @@ class mouseCacheRedis {
 			return $this->redisInitialized;
 		}
 
-		if ($this->config['use_redis'] == 1 and $this->config['servers']) {
+		if ($this->settings['use_redis'] == 1 and $this->settings['servers']) {
 			include_once('Predis/Autoloader.php');
 			Predis\Autoloader::register();
 			if (class_exists('Predis\Client')) {
 				$options = array();
-				if ($this->config['prefix']) {
-					$options['prefix'] = $this->config['prefix'].':';
+				if ($this->settings['prefix']) {
+					$options['prefix'] = $this->settings['prefix'].':';
 				}
-				$this->redis = new Predis\Client($this->config['servers'], $options);
+				$this->redis = new Predis\Client($this->settings['servers'], $options);
 
 				try {
 					$this->redis->connect();

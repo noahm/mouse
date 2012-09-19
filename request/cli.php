@@ -25,12 +25,12 @@ class mouseRequestCli {
 	 * Constructor
 	 *
 	 * @access	public
-	 * @param	[Optional] Object key used to initialize the object to mouse.  Also servers as the configuration array key.
+	 * @param	[Optional] Object key used to initialize the object to mouse.  Also serves as the settings array key.
 	 * @return	void
 	 */
 	public function __construct($objectKey = 'cli') {
 		$this->objectKey	= $objectKey;
-		$this->config		=& mouseHole::$config[$this->objectKey];
+		$this->settings		=& mouseHole::$settings[$this->objectKey];
 
 		global $argv;
 		if (count($argv)) {

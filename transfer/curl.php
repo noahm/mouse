@@ -25,12 +25,12 @@ class mouseTransferCurl {
 	 * Constructor
 	 *
 	 * @access	public
-	 * @param	[Optional] Object key used to initialize the object to mouse.  Also servers as the configuration array key.
+	 * @param	[Optional] Object key used to initialize the object to mouse.  Also serves as the settings array key.
 	 * @return	void
 	 */
 	public function __construct($objectKey = 'curl') {
 		$this->objectKey	= $objectKey;
-		$this->config		=& mouseHole::$config[$this->objectKey];
+		$this->settings		=& mouseHole::$settings[$this->objectKey];
 	}
 
 	/**
@@ -48,8 +48,8 @@ class mouseTransferCurl {
 		}
 		$timeout = 10;
 
-		if ($this->config['useragent']) {
-			$useragent = $this->config['useragent'];
+		if ($this->settings['useragent']) {
+			$useragent = $this->settings['useragent'];
 		} else {
 			$useragent = "Mouse Framework/".mouseHole::$version;
 		}
@@ -73,8 +73,8 @@ class mouseTransferCurl {
 			$curl_options[CURLOPT_POSTFIELDS]	= $postFields;
 		}
 
-		if ($this->config['interface']) {
-			$curl_options[CURLOPT_INTERFACE]	= $this->config['interface'];
+		if ($this->settings['interface']) {
+			$curl_options[CURLOPT_INTERFACE]	= $this->settings['interface'];
 		}
 
 		curl_setopt_array($ch, $curl_options);

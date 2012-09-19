@@ -32,15 +32,15 @@ class mouseCacheMemcache extends Memcache {
 	 * Constructor
 	 *
 	 * @access	public
-	 * @param	[Optional] Object key used to initialize the object to mouse.  Also servers as the configuration array key.
+	 * @param	[Optional] Object key used to initialize the object to mouse.  Also serves as the settings array key.
 	 * @return	void
 	 */
 	public function __construct($objectKey = 'memcache') {
 		$this->objectKey	= $objectKey;
-		$this->config		=& mouseHole::$config[$this->objectKey];
+		$this->settings		=& mouseHole::$settings[$this->objectKey];
 
 		//Automatic enable.
-		if ($this->config['use_memcache']) {
+		if ($this->settings['use_memcache']) {
 			$this->enabled	= $this->init();
 		} else {
 			$this->enabled	= false;
@@ -54,7 +54,7 @@ class mouseCacheMemcache extends Memcache {
 	 * @return	void
 	 */
 	public function init() {
-		return @$this->connect($this->config['server'], $this->config['port']);
+		return @$this->connect($this->settings['server'], $this->settings['port']);
 	}
 
 	/**
@@ -68,7 +68,7 @@ class mouseCacheMemcache extends Memcache {
 	 * @return	mixed
 	 */
 	public function add($key, $var, $flags, $expire) {
-		return Memcache::add($this->config['prefix'].$key, $var, $flags, $expire);
+		return Memcache::add($this->settings['prefix'].$key, $var, $flags, $expire);
 	}
 
 	/**
@@ -79,7 +79,7 @@ class mouseCacheMemcache extends Memcache {
 	 * @return	mixed
 	 */
 	public function delete($key) {
-		return Memcache::delete($this->config['prefix'].$key);
+		return Memcache::delete($this->settings['prefix'].$key);
 	}
 
 	/**
@@ -93,10 +93,10 @@ class mouseCacheMemcache extends Memcache {
 	public function get($key, $flags = null) {
 		if (is_array($key)) {
 			foreach ($key as $value) {
-				$fixed[] = $this->config['prefix'].$value;
+				$fixed[] = $this->settings['prefix'].$value;
 			}
 		} else {
-			$fixed = $this->config['prefix'].$key;
+			$fixed = $this->settings['prefix'].$key;
 		}
 		return Memcache::get($fixed, $flags);
 	}
@@ -112,7 +112,7 @@ class mouseCacheMemcache extends Memcache {
 	 * @return	mixed
 	 */
 	public function set($key, $var, $flags, $expire) {
-		return Memcache::set($this->config['prefix'].$key, $var, $flags, $expire);
+		return Memcache::set($this->settings['prefix'].$key, $var, $flags, $expire);
 	}
 }
 ?>
