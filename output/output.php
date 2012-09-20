@@ -147,23 +147,24 @@ class mouseOutputOutput {
 	 *
 	 * @access	public
 	 * @param	string	[Optional] Text to send.
+	 * @param	integer	[Optional] UTC Timestamp to prepend to the line.
 	 * @return	void
 	 */
-	public function sendLine($text = null) {
+	public function sendLine($text = null, $timestamp = null) {
 		if ($this->settings['logging']) {
 			//Log Writer Not Yet Implemented
 			//$this->log->write($text);
 		}
 
-		if (count(self::$lineBuffer)) {
-			foreach (self::$lineBuffer as $string) {
-				echo $string."\n";
-			}
-			self::$lineBuffer = array();
+		if ($text !== null) {
+			$this->addLine($text);
 		}
 
-		if ($text !== null) {
-			echo $text."\n";
+		if (count(self::$lineBuffer)) {
+			foreach (self::$lineBuffer as $string) {
+				echo ($timestamp ? '['.date('c', $timestamp).'] ' : null).$string."\n";
+			}
+			self::$lineBuffer = array();
 		}
 	}
 
@@ -172,10 +173,11 @@ class mouseOutputOutput {
 	 *
 	 * @access	public
 	 * @param	string	[Optional] Text to add.
+	 * @param	integer	[Optional] UTC Timestamp to prepend to the line.
 	 * @return	void
 	 */
-	public function addLine($text = '') {
-		self::$lineBuffer[] = $text;
+	public function addLine($text = '', $timestamp = null) {
+		self::$lineBuffer[] = ($timestamp ? '['.date('c', $timestamp).'] ' : null).$text;
 	}
 
 	/**
