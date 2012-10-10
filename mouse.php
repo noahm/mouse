@@ -61,7 +61,7 @@ class mouseHole {
 		//Define a constant mouse hole.
 		define('MOUSE_DIR', dirname(__FILE__));
 
-		spl_autoload_register(array(self, 'autoloadClass'), true, false);
+		spl_autoload_register(array($this, 'autoloadClass'), true, false);
 
 		//Always load settings first.  Some classes require settings to be passed in first for successful setup.
 		if (count($settings)) {
@@ -113,7 +113,7 @@ class mouseHole {
 				if (in_array($key, self::$reservedKeys)) {
 					throw new Exception("Mouse modules can not be assigned to certain reserved key words.  Attempted to load: {$key} => {$className}");
 				}
-				if (!$this->$key instanceof $className) {
+				if (!property_exists($this, $key) or !$this->$key instanceof $className) {
 					$this->$key = new $className($key);
 				}
 			}

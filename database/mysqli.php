@@ -29,6 +29,13 @@ class mouseDatabaseMysqli {
 	public $objectKey;
 
 	/**
+	 * Currently Connected
+	 *
+	 * @var		boolean
+	 */
+	private $connected = false;
+
+	/**
 	 * Constructor
 	 *
 	 * @access	public
@@ -38,6 +45,10 @@ class mouseDatabaseMysqli {
 	public function __construct($objectKey = 'DB') {
 		$this->objectKey	= $objectKey;
 		$this->settings		=& mouseHole::$settings[$this->objectKey];
+
+		if ($this->settings['prefix'] === null) {
+			$this->settings['prefix'] = '';
+		}
 
 		//Automatic enable.
 		if ($this->settings['use_database']) {
@@ -54,10 +65,14 @@ class mouseDatabaseMysqli {
 	 * @return	void
 	 */
 	public function init() {
-		if (intval($this->settings['port']) > 0) {
-			$this->settings['server'] = $this->settings['server'].':'.intval($this->settings['port']);
+		if ($this->connected) {
+			$this->mysqli->close();
 		}
-		$this->connect($this->settings['server'], $this->settings['user'], $this->settings['pass'], $this->settings['database']);
+		if (is_object($this->mysqli)) {
+			unset($this->mysqli);
+		}
+		$this->mysqli = new mysqli();
+		$this->connect($this->settings['server'], $this->settings['user'], $this->settings['pass'], $this->settings['database'], ($this->settings['port'] ? $this->settings['port'] : 3306));
 		$this->query("SET NAMES utf8");
 		return true;
 	}
@@ -69,13 +84,28 @@ class mouseDatabaseMysqli {
 	 * @param	string	Server address
 	 * @param	string	Username
 	 * @param	string	Password
+	 * @param	string	Database name
+	 * @param	integer	Server port
 	 * @return	void
 	 */
-	public function connect($server, $user, $pass, $db) {
-		$this->mysqli = new mysqli('p:'.$server, $user, $pass, $db);
+	public function connect($server, $user, $pass, $db, $port) {
+		$this->mysqli->real_connect(($this->settings['persistent'] ? 'p:' : null).$server, $user, $pass, $db, $port);
 		if ($this->connect_error) {
 			$this->dbError();
+		} else {
+			$this->connected = true;
 		}
+	}
+
+	/**
+	 * Disconnect from Database
+	 *
+	 * @access	public
+	 * @return	void
+	 */
+	public function disconnect() {
+		$this->mysqli->close();
+		$this->connected = false;
 	}
 
 	/**
@@ -98,8 +128,12 @@ class mouseDatabaseMysqli {
 	 * @param	array		Array of data to build the select statement.
 	 * @return	resource	Query resource
 	 */
-	public function select($data) {
-		if (is_array($data['add_join'])) {
+	public function select($data = array()) {
+		$where = array();
+		$from = array();
+		$left = array();
+
+		if (array_key_exists('add_join', $data) and is_array($data['add_join'])) {
 			foreach ($data['add_join'] as $key => $join) {
 				($join['select'] ? $select[] = $join['select'] : null);
 				($join['where'] ? $where[] = $join['where'] : null);
@@ -121,19 +155,19 @@ class mouseDatabaseMysqli {
 
 		$query = 'SELECT '.implode(', ', $select).' FROM '.implode(', ', $from).(count($left) ? ' '.implode(' ', $left) : '');
 
-		if ($where) {
+		if (count($where)) {
 			$query .= ' WHERE '.implode(' AND ', $where);
 		}
 
-		if ($data['group']) {
+		if (array_key_exists('group', $data)) {
 			$query .= ' GROUP BY '.$data['group'];
 		}
 
-		if ($data['order']) {
+		if (array_key_exists('order', $data)) {
 			$query .= ' ORDER BY '.$data['order'];
 		}
 
-		if ($data['limit']) {
+		if (array_key_exists('limit', $data) and is_array($data['limit'])) {
 			if (count($data['limit']) == 2) {
 				$query .= ' LIMIT '.$data['limit'][0].','.$data['limit'][1];
 			} elseif (count($data['limit']) == 1) {
