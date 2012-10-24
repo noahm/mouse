@@ -29,11 +29,18 @@ class mouseHole {
 	public static $settings = array();
 
 	/**
-	 * Reserved Key Words
+	 * Reserved Key Words - Generally anything defined up here before the functions.
 	 *
 	 * @var		array
 	 */
 	private static $reservedKeys = array('settings', 'version', 'iteration', 'instance');
+
+	/**
+	 * Currently loaded classes.
+	 *
+	 * @var		array
+	 */
+	private $loadedClasses = array();
 
 	/**
 	 * Mouse Framework Version
@@ -115,9 +122,49 @@ class mouseHole {
 				}
 				if (!property_exists($this, $key) or !$this->$key instanceof $className) {
 					$this->$key = new $className($key);
+					$this->loadedClasses[$key] = $className;
 				}
 			}
 		}
+	}
+
+	/**
+	 * Returns the first object key found for a class name.
+	 *
+	 * @access	public
+	 * @param	string	Class name to search for on $this->loadClasses.
+	 * @return	mixed	Object or Null
+	 */
+	public function getClassByName($className) {
+		$key = array_search($className, $this->loadedClasses);
+
+		if ($key and property_exists($this, $key) and $this->$key instanceof $className) {
+			return $this->$key;
+		}
+		return null;
+	}
+
+	/**
+	 * Returns alls object keys found for a class name in an array.
+	 *
+	 * @access	public
+	 * @param	string	Class name to search for on $this->loadClasses.
+	 * @return	mixed	Array of Objects or Null
+	 */
+	public function getClassesByName($className) {
+		$keys = array_keys($this->loadedClasses, $className);
+
+		if (count($keys)) {
+			foreach ($keys as $key) {
+				if (property_exists($this, $key) and $this->$key instanceof $className) {
+					$objects[] = $this->$key;
+				}
+			}
+			if (count($objects)) {
+				return $objects;
+			}
+		}
+		return null;
 	}
 
 	/**
