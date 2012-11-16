@@ -29,6 +29,13 @@ class mouseDatabaseMysqli {
 	public $objectKey;
 
 	/**
+	 * Result type to use, array or object.
+	 *
+	 * @var		string
+	 */
+	private $resultType = 'array';
+
+	/**
 	 * Currently Connected
 	 *
 	 * @var		boolean
@@ -48,6 +55,10 @@ class mouseDatabaseMysqli {
 
 		if ($this->settings['prefix'] === null) {
 			$this->settings['prefix'] = '';
+		}
+
+		if (in_array($this->settings['result_type'], array('array', 'object'))) {
+			$this->resultType = $this->settings['result_type'];
 		}
 
 		//Automatic enable.
@@ -177,9 +188,7 @@ class mouseDatabaseMysqli {
 
 		$this->generatedQuery = $query;
 		$result = $this->query($this->generatedQuery);
-		if (!$result) {
-			$this->dbError();
-		}
+
 		return $result;
 	}
 
@@ -188,17 +197,25 @@ class mouseDatabaseMysqli {
 	 *
 	 * @access	public
 	 * @param	array	Array of data to build the select statement.
-	 * @param	string	Data type to return, array or object.
+	 * @param	string	[Optional] Data type to return, array or object.
 	 * @return	boolean
 	 */
-	public function selectAndFetch($data, $dataType = 'array') {
-		$this->select($data);
-		if ($dataType == 'array') {
-			$result = $this->fetch();
-		} else {
-			$result = $this->fetchObject();
-		}
+	public function selectAndFetch($data, $resultType = null) {
+		$result = $this->select($data);
+
+		$result = $this->fetch($result, $resultType);
+
 		return $result;
+	}
+
+	/**
+	 * Returns the number of affected rows for the last INSERT, UPDATE, REPLACE or DELETE query.
+	 *
+	 * @access	public
+	 * @return	integer
+	 */
+	public function getAffectedRows() {
+		return $this->mysqli->affected_rows;
 	}
 
 	/**
@@ -246,9 +263,7 @@ class mouseDatabaseMysqli {
 		$this->generatedQuery = 'INSERT INTO '.$table.' ('.implode(', ', $fields).') VALUES ('.implode(', ', $values).')';
 
 		$result = $this->query($this->generatedQuery);
-		if (!$result) {
-			$this->dbError();
-		}
+
 		return $result;
 	}
 
@@ -282,9 +297,7 @@ class mouseDatabaseMysqli {
 
 		$this->generatedQuery = $query;
 		$result = $this->query($this->generatedQuery);
-		if (!$result) {
-			$this->dbError();
-		}
+
 		return $result;
 	}
 
@@ -309,10 +322,40 @@ class mouseDatabaseMysqli {
 
 		$this->generatedQuery = $query;
 		$result = $this->query($this->generatedQuery);
-		if (!$result) {
-			$this->dbError();
-		}
+
 		return $result;
+	}
+
+	/**
+	 * Begin a Transaction
+	 *
+	 * @access	public
+	 * @return	boolean
+	 */
+	public function transactionStart() {
+		$result = $this->query('START TRANSACTION');
+
+		return $result;
+	}
+
+	/**
+	 * Commit and finalize a transaction
+	 *
+	 * @access	public
+	 * @return	boolean	True on success, false on failure.
+	 */
+	public function transactionCommit() {
+		return $this->mysqli->commit();
+	}
+
+	/**
+	 * Rollback a transaction
+	 *
+	 * @access	public
+	 * @return	boolean	True on success, false on failure.
+	 */
+	public function transactionRollback() {
+		return $this->mysqli->rollback();
 	}
 
 	/**
@@ -338,6 +381,11 @@ class mouseDatabaseMysqli {
 		if ($result instanceof mysqli_result) {
 			$this->queryResult = $result;
 		}
+
+		if (!$result) {
+			$this->dbError();
+		}
+
 		return $result;
 	}
 
@@ -345,32 +393,30 @@ class mouseDatabaseMysqli {
 	 * Database Fetch Array
 	 *
 	 * @access	public
-	 * @param	resource	[Optional] Query resource
+	 * @param	object	[Optional] MySQLi Result Object
+	 * @param	string	[Optional] One time override of data type to return, array or object.
 	 * @return	mixed
 	 */
-	public function fetch($query = null) {
-		if (!$query and !$this->queryResult) {
+	public function fetch($query = null, $resultType = null) {
+		if (!$query instanceof mysqli_result and !$this->queryResult instanceof mysqli_result) {
 			return false;
-		} elseif (!$query and $this->queryResult) {
+		} elseif (!$query instanceof mysqli_result and $this->queryResult instanceof mysqli_result) {
 			$query = $this->queryResult;
 		}
-		return $query->fetch_assoc();
-	}
 
-	/**
-	 * Database Fetch Object
-	 *
-	 * @access	public
-	 * @param	resource	[Optional] Query resource
-	 * @return	mixed
-	 */
-	public function fetchObject($query = null) {
-		if (!$query and !$this->queryResult) {
-			return false;
-		} elseif (!$query and $this->queryResult) {
-			$query = $this->queryResult;
+		if (in_array($resultType, array('array', 'object'))) {
+			$_resultType = $resultType;
+		} else {
+			$_resultType = $this->resultType;
 		}
-		return $query->fetch_object();
+
+		if ($_resultType == 'object') {
+			$result = $query->fetch_object();
+		} else {
+			$result = $query->fetch_assoc();
+		}
+
+		return $result;
 	}
 
 	/**

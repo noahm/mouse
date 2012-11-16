@@ -97,12 +97,12 @@ class mouseHole {
 	 * @param	array	Array of settings.
 	 * @return	void
 	 */
-	public function loadSettings($settings = array()) {
+	public function loadSettings($settings) {
 		if (!is_array(self::$settings)) {
 			//Reseting the settings array if it gets messed up.
 			self::$settings = array();
 		}
-		if ($settings and is_array($settings)) {
+		if (count($settings) and is_array($settings)) {
 			self::$settings = array_merge(self::$settings, $settings);
 		}
 	}
@@ -156,7 +156,7 @@ class mouseHole {
 
 		if (count($keys)) {
 			foreach ($keys as $key) {
-				if (property_exists($this, $key) and $this->$key instanceof $className) {
+				if ($key and property_exists($this, $key) and $this->$key instanceof $className) {
 					$objects[] = $this->$key;
 				}
 			}

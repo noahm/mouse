@@ -29,6 +29,7 @@ class mouseDatabaseMysql {
 	public $objectKey;
 
 	/**
+	 * DEPRECATED
 	 * Constructor
 	 *
 	 * @access	public
