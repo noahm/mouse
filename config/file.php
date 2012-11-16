@@ -2,7 +2,7 @@
 /**
  * NoName Studios
  * Mouse Framework
- * Mouse Config Mouse - Native Mouse Configuration
+ * Mouse Config File - Native Mouse configuration from a file.
  *
  * @author 		Alexia E. Smith
  * @copyright	(c) 2010 - 2013 NoName Studios
@@ -13,7 +13,7 @@
  *
 **/
 
-class mouseConfigMouse {
+class mouseConfigFile {
 	/**
 	 * Object Key
 	 *
@@ -25,7 +25,7 @@ class mouseConfigMouse {
 	 * Constructor
 	 *
 	 * @access	public
-	 * @param	[Optional] Object key used to initialize the object to mouse.  Also serves as the settings array key.
+	 * @param	[Optional] Object key used to initialize the object to mouse.  Also servers as the configuration array key.
 	 * @return	void
 	 */
 	public function __construct($objectKey = 'config') {

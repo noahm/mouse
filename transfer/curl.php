@@ -5,7 +5,7 @@
  * Mouse Transfer CURL - Wrapper functions for file transfer with CURL.
  *
  * @author 		Alexia E. Smith
- * @copyright	(c) 2010 - 2012 NoName Studios
+ * @copyright	(c) 2010 - 2013 NoName Studios
  * @license		All Rights Reserved
  * @package		Mouse Framework
  * @link		http://www.nonamestudios.com/

@@ -5,7 +5,7 @@
  * Mouse Request HTTP - Handles $_GET and $_POST variables, cleaning them, and inserting them into the request object.
  *
  * @author 		Alexia E. Smith
- * @copyright	(c) 2010 - 2012 NoName Studios
+ * @copyright	(c) 2010 - 2013 NoName Studios
  * @license		All Rights Reserved
  * @package		Mouse Framework
  * @link		http://www.nonamestudios.com/
