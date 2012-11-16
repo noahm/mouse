@@ -448,5 +448,35 @@ class mouseDatabaseMysqli {
 			return $this->settings['prefix'].$from;
 		}
 	}
+
+	/**
+	 * Set resultType to arrays.
+	 *
+	 * @access	public
+	 * @return	void
+	 */
+	public function setResultTypeArray() {
+		$this->resultType = 'array';
+	}
+
+	/**
+	 * Set resultType to objects.
+	 *
+	 * @access	public
+	 * @return	void
+	 */
+	public function setResultTypeObject() {
+		$this->resultType = 'object';
+	}
+
+	/**
+	 * Return the current resultType.
+	 *
+	 * @access	public
+	 * @return	string	Current result type.
+	 */
+	public function getResultType() {
+		return $this->resultType;
+	}
 }
 ?>
