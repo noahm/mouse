@@ -50,7 +50,9 @@ class mouseConfigMediawiki {
 										);
 
 		if ($wgMetaNamespace) {
-			mouseHole::$settings['wiki_meta_namespace'] = $wgMetaNamespace;
+			mouseHole::$settings['wiki']['wiki_name']		= $wgSitename;
+			mouseHole::$settings['wiki']['wiki_domain']		= str_ireplace(array('http://', 'https://'), '', $wgServer);
+			mouseHole::$settings['wiki']['wiki_meta_name']	= $wgMetaNamespace;
 		} else {
 			throw new Exception('MediaWiki Meta Name $wgMetaNamespace is not defined.  Class '.__CLASS__.' requires this to continue.');
 		}
