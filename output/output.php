@@ -29,11 +29,11 @@ class mouseOutputOutput {
 	static private $lineBuffer;
 
 	/**
-	 * Template Folder Location
+	 * Template Folder Locations
 	 *
-	 * @var		string
+	 * @var		array
 	 */
-	protected $templateFolder;
+	protected $templateFolders = array();
 
 	/**
 	 * Object Key
@@ -68,27 +68,31 @@ class mouseOutputOutput {
 			$skinClass = "skin_{$skin}";
 		}
 
-		$file = "{$this->templateFolder}/{$skinClass}.php";
-		if (is_file($file)) {
-			try {
-				include_once($file);
-				$this->$skin = new $skinClass;
-				return true;
-			} catch (Exception $e) {
-				return false;
+		if (count($this->templateFolders)) {
+			foreach ($this->templateFolders as $folder) {
+				$file = "{$folder}/{$skinClass}.php";
+				if (is_file($file)) {
+					try {
+						include_once($file);
+						$this->$skin = new $skinClass;
+						return true;
+					} catch (Exception $e) {
+						return false;
+					}
+				}
 			}
 		}
 		return false;
 	}
 
 	/**
-	 * Template Loader
+	 * Returns template folders.
 	 *
 	 * @access	public
-	 * @return	string	Current template folder.
+	 * @return	array	Current template folders.
 	 */
-	public function getTemplateFolder() {
-		return $this->templateFolder;
+	public function getTemplateFolders() {
+		return $this->templateFolders;
 	}
 
 	/**
@@ -98,14 +102,14 @@ class mouseOutputOutput {
 	 * @param	string	Complete folder path to where skins are stored for this object instance.
 	 * @return	boolean	Success
 	 */
-	public function setTemplateFolder($folder) {
+	public function addTemplateFolder($folder) {
 		if (!$folder) {
 			return false;
 		}
 
 		$folder = rtrim($folder, '/');
 		if (is_dir($folder)) {
-			$this->templateFolder = $folder;
+			$this->templateFolders[] = $folder;
 			return true;
 		}
 		return false;
