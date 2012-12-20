@@ -70,9 +70,6 @@ class mouseConfigMediawiki {
 			mouseHole::$settings['redis']['prefix']		= MASTER_WIKI_META.':';
 			mouseHole::$settings['redis']['use_redis']	= true;
 		}
-
-		mouseHole::$settings['aes_key']	= $AESkey;
-		mouseHole::$settings['aes_iv']	= $AESIV;
 	}
 }
 ?>
