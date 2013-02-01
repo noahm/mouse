@@ -100,8 +100,8 @@ class mouseDatabaseMysqli {
 	 * @return	void
 	 */
 	public function connect($server, $user, $pass, $db, $port) {
-		$this->mysqli->real_connect(($this->settings['persistent'] ? 'p:' : null).$server, $user, $pass, $db, $port);
-		if ($this->connect_error) {
+		$success = @$this->mysqli->real_connect(($this->settings['persistent'] ? 'p:' : null).$server, $user, $pass, $db, $port);
+		if (!$success or $this->mysqli->connect_error) {
 			$this->dbError();
 		} else {
 			$this->connected = true;
