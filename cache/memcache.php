@@ -22,6 +22,20 @@ class mouseCacheMemcache extends Memcache {
 	private $memcache_link;
 
 	/**
+	 * Memory cached Memcache results.
+	 *
+	 * @var		array
+	 */
+	protected $RAMcache = array();
+
+	/**
+	 * Flag to enable memory cached Memcache results.
+	 *
+	 * @var		boolean
+	 */
+	protected $useRAMCache = array();
+
+	/**
 	 * Object Key
 	 *
 	 * @var		object
@@ -32,12 +46,18 @@ class mouseCacheMemcache extends Memcache {
 	 * Constructor
 	 *
 	 * @access	public
-	 * @param	[Optional] Object key used to initialize the object to mouse.  Also serves as the settings array key.
+	 * @param	string	[Optional] Object key used to initialize the object to mouse.  Also serves as the settings array key.
+	 * @param	boolean	[Optional] Store Memcache results in local RAM for faster look up.  Default is true.
 	 * @return	void
 	 */
-	public function __construct($objectKey = 'memcache') {
+	public function __construct($objectKey = 'memcache', $useRAMCache = true) {
 		$this->objectKey	= $objectKey;
 		$this->settings		=& mouseHole::$settings[$this->objectKey];
+
+		if (!is_bool($useRAMCache)) {
+			throw new Exception("Invalid value provided to \$useRAMCache in ".__METHOD__.".");
+		}
+		$this->useRAMCache	= $useRAMCache;
 
 		//Automatic enable.
 		if ($this->settings['use_memcache']) {
@@ -48,6 +68,18 @@ class mouseCacheMemcache extends Memcache {
 	}
 
 	/**
+	 * Magic call function to map $mouse->memcache->command() calls to Memcache::command().
+	 *
+	 * @access	public
+	 * @param	string	Called magic function name.
+	 * @param	array	Array of arguments.
+	 * @return	mixed
+	 */
+	public function __call($function, $arguments) {
+		return call_user_func_array(array('Memcache', $function), $arguments);
+	}
+
+	/**
 	 * Automatically initiate memcache connection.
 	 *
 	 * @access	public
@@ -55,6 +87,26 @@ class mouseCacheMemcache extends Memcache {
 	 */
 	public function init() {
 		return @$this->connect($this->settings['server'], $this->settings['port']);
+	}
+
+	/**
+	 * Enables the local RAM cache.
+	 *
+	 * @access	public
+	 * @return	void
+	 */
+	public function enableRAMCache() {
+		$this->useRAMCache = true;
+	}
+
+	/**
+	 * Enables the local RAM cache.
+	 *
+	 * @access	public
+	 * @return	void
+	 */
+	public function disableRAMCache() {
+		$this->useRAMCache = true;
 	}
 
 	/**
@@ -86,19 +138,28 @@ class mouseCacheMemcache extends Memcache {
 	 * Memcache Get with automatic prefixing.
 	 *
 	 * @access	public
-	 * @param	string	Key for stored item
+	 * @param	mixed	Key string or array of key strings for stored item(s)
 	 * @param	mixed	[Optional] Memcache flags
 	 * @return	mixed
 	 */
 	public function get($key, $flags = null) {
 		if (is_array($key)) {
+			//We do not use the RAM cache for arrays of keys.  This is because the possibility of only having part of those keys in the RAM cache would cause additional Memcache::get calls thus negating any performance gains.
 			foreach ($key as $value) {
-				$fixed[] = $this->settings['prefix'].$value;
+				$prefixedKey[] = $this->settings['prefix'].$value;
 			}
-		} else {
-			$fixed = $this->settings['prefix'].$key;
+		} else {	
+			$prefixedKey = $this->settings['prefix'].$key;
+			if ($this->useRAMCache and array_key_exists($prefixedKey, $this->RAMcache)) {
+				if ($this->RAMcache[$prefixedKey]['expire'] < time()) {
+					return $this->RAMcache[$prefixedKey]['value'];
+				} else {
+					unset($this->RAMcache[$prefixedKey]);
+				}
+			}
 		}
-		return Memcache::get($fixed, $flags);
+
+		return Memcache::get($prefixedKey, $flags);
 	}
 
 	/**
@@ -109,10 +170,65 @@ class mouseCacheMemcache extends Memcache {
 	 * @param	mixed	Item to store
 	 * @param	mixed	Memcache flags
 	 * @param	integer	Seconds until expiration
-	 * @return	mixed
+	 * @return	boolean	True on success, false on failure.
 	 */
 	public function set($key, $var, $flags, $expire) {
-		return Memcache::set($this->settings['prefix'].$key, $var, $flags, $expire);
+		$return = Memcache::set($this->settings['prefix'].$key, $var, $flags, $expire);
+		if ($return and $this->useRAMCache) {
+			$this->RAMcache[$this->settings['prefix'].$key] = array(
+																	'value' => $var,
+																	'expire' => ($expire <= 2592000 ? time() + $expire : $expire)
+																	);
+		}
+		return $return;
+	}
+
+	/**
+	 * Memcache Decrement with automatic prefixing.
+	 *
+	 * @access	public
+	 * @param	string	Key for stored item
+	 * @param	integer	[Optional] Amount to decrease by.
+	 * @return	mixed	Modified value of the key or false on failure.
+	 */
+	public function decrement($key, $amount = -1) {
+		$prefixedKey = $this->settings['prefix'].$key;
+
+		$return = Memcache::decrement($prefixedKey, $amount);
+
+		if ($return !== false and $this->useRAMCache and array_key_exists($prefixedKey, $this->RAMcache)) {
+			if ($this->RAMcache[$prefixedKey]['expire'] < time()) {
+				$this->RAMcache[$prefixedKey]['value'] = $return;
+			} else {
+				unset($this->RAMcache[$prefixedKey]);
+			}
+		}
+
+		return $return;
+	}
+
+	/**
+	 * Memcache Increment with automatic prefixing.
+	 *
+	 * @access	public
+	 * @param	string	Key for stored item
+	 * @param	integer	[Optional] Amount to increase by.
+	 * @return	mixed	Modified value of the key or false on failure.
+	 */
+	public function increment($key, $amount = 1) {
+		$prefixedKey = $this->settings['prefix'].$key;
+
+		$return = Memcache::increment($prefixedKey, $amount);
+
+		if ($return !== false and $this->useRAMCache and array_key_exists($prefixedKey, $this->RAMcache)) {
+			if ($this->RAMcache[$prefixedKey]['expire'] < time()) {
+				$this->RAMcache[$prefixedKey]['value'] = $return;
+			} else {
+				unset($this->RAMcache[$prefixedKey]);
+			}
+		}
+
+		return $return;
 	}
 }
 ?>

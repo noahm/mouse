@@ -67,7 +67,7 @@ class mouseCacheRedis {
 	 * @access	public
 	 * @param	string	Called magic function name.
 	 * @param	array	Array of arguments.
-	 * @return	void
+	 * @return	mixed
 	 */
 	public function __call($function, $arguments) {
 		if ($this->redisInitialized) {
