@@ -33,7 +33,7 @@ class mouseCacheMemcache extends Memcache {
 	 *
 	 * @var		boolean
 	 */
-	protected $useRAMCache = array();
+	protected $useRAMCache = true;
 
 	/**
 	 * Object Key
@@ -50,20 +50,19 @@ class mouseCacheMemcache extends Memcache {
 	 * @param	boolean	[Optional] Store Memcache results in local RAM for faster look up.  Default is true.
 	 * @return	void
 	 */
-	public function __construct($objectKey = 'memcache', $useRAMCache = true) {
+	public function __construct($objectKey = 'memcache') {
 		$this->objectKey	= $objectKey;
 		$this->settings		=& mouseHole::$settings[$this->objectKey];
-
-		if (!is_bool($useRAMCache)) {
-			throw new Exception("Invalid value provided to \$useRAMCache in ".__METHOD__.".");
-		}
-		$this->useRAMCache	= $useRAMCache;
 
 		//Automatic enable.
 		if ($this->settings['use_memcache']) {
 			$this->enabled	= $this->init();
 		} else {
 			$this->enabled	= false;
+		}
+
+		if (is_bool($this->settings['use_ramcache'])) {
+			$this->useRAMCache = $this->settings['use_ramcache'];
 		}
 	}
 
@@ -100,13 +99,23 @@ class mouseCacheMemcache extends Memcache {
 	}
 
 	/**
-	 * Enables the local RAM cache.
+	 * Disables the local RAM cache.
 	 *
 	 * @access	public
 	 * @return	void
 	 */
 	public function disableRAMCache() {
-		$this->useRAMCache = true;
+		$this->useRAMCache = false;
+	}
+
+	/**
+	 * Flushes the local RAM cache.
+	 *
+	 * @access	public
+	 * @return	void
+	 */
+	public function flushRAMCache() {
+		$this->RAMCache = array();
 	}
 
 	/**
@@ -173,13 +182,17 @@ class mouseCacheMemcache extends Memcache {
 	 * @return	boolean	True on success, false on failure.
 	 */
 	public function set($key, $var, $flags, $expire) {
-		$return = Memcache::set($this->settings['prefix'].$key, $var, $flags, $expire);
+		$prefixedKey = $this->settings['prefix'].$key;
+
+		$return = Memcache::set($prefixedKey, $var, $flags, $expire);
+
 		if ($return and $this->useRAMCache) {
-			$this->RAMcache[$this->settings['prefix'].$key] = array(
-																	'value' => $var,
-																	'expire' => ($expire <= 2592000 ? time() + $expire : $expire)
-																	);
+			$this->RAMcache[$prefixedKey] = array(
+													'value' => $var,
+													'expire' => ($expire <= 2592000 ? time() + $expire : $expire)
+												);
 		}
+
 		return $return;
 	}
 
@@ -196,8 +209,8 @@ class mouseCacheMemcache extends Memcache {
 
 		$return = Memcache::decrement($prefixedKey, $amount);
 
-		if ($return !== false and $this->useRAMCache and array_key_exists($prefixedKey, $this->RAMcache)) {
-			if ($this->RAMcache[$prefixedKey]['expire'] < time()) {
+		if ($this->useRAMCache and array_key_exists($prefixedKey, $this->RAMcache)) {
+			if ($this->RAMcache[$prefixedKey]['expire'] < time() and $return !== false) {
 				$this->RAMcache[$prefixedKey]['value'] = $return;
 			} else {
 				unset($this->RAMcache[$prefixedKey]);
@@ -220,8 +233,8 @@ class mouseCacheMemcache extends Memcache {
 
 		$return = Memcache::increment($prefixedKey, $amount);
 
-		if ($return !== false and $this->useRAMCache and array_key_exists($prefixedKey, $this->RAMcache)) {
-			if ($this->RAMcache[$prefixedKey]['expire'] < time()) {
+		if ($this->useRAMCache and array_key_exists($prefixedKey, $this->RAMcache)) {
+			if ($this->RAMcache[$prefixedKey]['expire'] < time() and $return !== false) {
 				$this->RAMcache[$prefixedKey]['value'] = $return;
 			} else {
 				unset($this->RAMcache[$prefixedKey]);
