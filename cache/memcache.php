@@ -148,7 +148,7 @@ class mouseCacheMemcache extends Memcache {
 			foreach ($key as $value) {
 				$prefixedKey[] = $this->settings['prefix'].$value;
 			}
-		} else {	
+		} else {
 			$prefixedKey = $this->settings['prefix'].$key;
 			if ($this->useRAMCache and array_key_exists($prefixedKey, $this->RAMcache)) {
 				if ($this->RAMcache[$prefixedKey]['expire'] < time()) {
