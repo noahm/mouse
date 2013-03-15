@@ -176,7 +176,7 @@ class mouseOutputOutput {
 	 * @return	void
 	 */
 	public function sendLine($text = '', $timestamp = null) {
-		echo $this->formatLine($text, $timestamp);."\n";
+		echo $this->formatLine($text, $timestamp)."\n";
 	}
 
 	/**
