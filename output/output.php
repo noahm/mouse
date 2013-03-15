@@ -33,14 +33,14 @@ class mouseOutputOutput {
 	 *
 	 * @var		string
 	 */
-	private $lineFormat = '%1';
+	private $lineFormat = '%1$s';
 
 	/**
 	 * Output Line Buffer Format with Timestamps
 	 *
 	 * @var		string
 	 */
-	private $lineFormatWithTimestamp = '[%2] %1';
+	private $lineFormatWithTimestamp = '[%2$s] %1$s';
 
 	/**
 	 * Output Line Timestamp Date Format
