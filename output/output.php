@@ -29,6 +29,27 @@ class mouseOutputOutput {
 	static private $lineBuffer;
 
 	/**
+	 * Output Line Buffer Format
+	 *
+	 * @var		string
+	 */
+	private $lineFormat = '%1';
+
+	/**
+	 * Output Line Buffer Format with Timestamps
+	 *
+	 * @var		string
+	 */
+	private $lineFormatWithTimestamp = '[%2] %1';
+
+	/**
+	 * Output Line Timestamp Date Format
+	 *
+	 * @var		string
+	 */
+	private $lineDateFormat = 'c';
+
+	/**
 	 * Template Folder Locations
 	 *
 	 * @var		array
@@ -147,29 +168,32 @@ class mouseOutputOutput {
 	}
 
 	/**
-	 * Sends provided string to CLI appended to existing addLine() buffer.  Automatically sets up line breaks.
+	 * Sends provided string to CLI immediately.  Automatically sets up line breaks.  Calling this function with no parameters will send a blank line.
 	 *
 	 * @access	public
 	 * @param	string	[Optional] Text to send.
 	 * @param	integer	[Optional] UTC Timestamp to prepend to the line.
 	 * @return	void
 	 */
-	public function sendLine($text = null, $timestamp = null) {
-		if ($this->settings['logging']) {
-			//Log Writer Not Yet Implemented
-			//$this->log->write($text);
-		}
+	public function sendLine($text = '', $timestamp = null) {
+		echo $this->formatLine($text, $timestamp);."\n";
+	}
 
-		if ($text !== null) {
-			$this->addLine($text);
-		}
-
-		if (count(self::$lineBuffer)) {
+	/**
+	 * Sends provided string to CLI appended to existing addLine() buffer.  Automatically sets up line breaks.
+	 *
+	 * @access	public
+	 * @return	integer	Number of lines sent.
+	 */
+	public function sendLineBuffer() {
+		$totalLines = count(self::$lineBuffer);
+		if ($totalLines) {
 			foreach (self::$lineBuffer as $string) {
-				echo ($timestamp ? '['.date('c', $timestamp).'] ' : null).$string."\n";
+				echo $string."\n";
 			}
 			self::$lineBuffer = array();
 		}
+		return $totalLines;
 	}
 
 	/**
@@ -180,8 +204,63 @@ class mouseOutputOutput {
 	 * @param	integer	[Optional] UTC Timestamp to prepend to the line.
 	 * @return	void
 	 */
-	public function addLine($text = '', $timestamp = null) {
-		self::$lineBuffer[] = ($timestamp ? '['.date('c', $timestamp).'] ' : null).$text;
+	public function addLineToBuffer($text = '', $timestamp = null) {
+		self::$lineBuffer[] = $this->formatLine($text, $timestamp);
+	}
+
+	/**
+	 * Returns all the existing lines.
+	 *
+	 * @access	public
+	 * @return	array	Buffered Lines
+	 */
+	public function getLineBuffer() {
+		return self::$lineBuffer;
+	}
+
+	/**
+	 * Set the format for lines to display.
+	 *
+	 * @access	public
+	 * @param	string	Line format to be used when not using a timestamp.
+	 * @return	void
+	 */
+	public function setLineFormat($lineFormat) {
+		$this->lineFormat = $lineFormat;
+	}
+
+	/**
+	 * Set the format for lines with timestamps to display.
+	 *
+	 * @access	public
+	 * @param	string	Line format to be used when using a timestamp.
+	 * @return	void
+	 */
+	public function setLineFormatWithTimestamp($lineFormatWithTimestamp) {
+		$this->lineFormatWithTimestamp = $lineFormatWithTimestamp;
+	}
+
+	/**
+	 * Set the format timestamp dates to display.  See date() documentation for valid formats.
+	 *
+	 * @access	public
+	 * @param	string	Timestamp date format.
+	 * @return	void
+	 */
+	public function setLineDateFormat($lineDateFormat) {
+		$this->lineDateFormat = $lineDateFormat;
+	}
+
+	/**
+	 * Set the format for lines to display.
+	 *
+	 * @access	private
+	 * @param	string	Text to add.
+	 * @param	integer	UTC Timestamp to prepend to the line.
+	 * @return	void
+	 */
+	private function formatLine($text, $timestamp) {
+		return ($timestamp ? sprintf($this->lineFormatWithTimestamp, $text, date($this->lineDateFormat, $timestamp)) : sprintf($this->lineFormat, $text));
 	}
 
 	/**
