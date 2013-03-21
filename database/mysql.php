@@ -196,17 +196,16 @@ class mouseDatabaseMysql {
 	 */
 	public function insert($table, $data = array()) {
 		$table = $this->settings['prefix'].$table;
-		
-		foreach ($data as $field => $value) {
-			if (is_numeric($value) and !is_infinite($value)) {
-				$fields[] = $field;
-				$values[] = floatval($value);
-			} else {
-				$fields[] = $field;
-				$values[] = "'".$this->escapeString($value)."'";
-			}
+
+		if (!is_array($data) or !count($data)) {
+			return false;
 		}
-		
+
+		foreach ($data as $field => $value) {
+			$fields[] = $field;
+			$values[] = "'".$this->escapeString($value)."'";
+		}
+
 		$this->generatedQuery = 'INSERT INTO '.$table.' ('.implode(', ', $fields).') VALUES ('.implode(', ', $values).')';
 
 		$result = $this->query($this->generatedQuery);
