@@ -319,16 +319,19 @@ HTML;
 			if ($pagination['stats']) {
 				$HTML .= "<li class='pagination_stats'>Page {$pagination['stats']['current_page']} of {$pagination['stats']['pages']}</li>";
 			}
-			if ($pagination['first']) {
-				$HTML .= "<li><a href='?st={$pagination['first']['st']}'>&laquo;</a></li>";
-			}
-			foreach ($pagination['pages'] as $page => $info) {
-				if ($page > 0) {
-					$HTML .= "<li".($info['selected'] ? " class='selected'" : null)."><a href='?st={$info['st']}'>{$page}</a></li>";
+
+			if (count($pagination['pages']) > 1) {
+				if ($pagination['first']) {
+					$HTML .= "<li><a href='?st={$pagination['first']['st']}'>&laquo;</a></li>";
 				}
-			}
-			if ($pagination['last']) {
-				$HTML .= "<li><a href='?st={$pagination['last']['st']}'>&raquo;</a></li>";
+				foreach ($pagination['pages'] as $page => $info) {
+					if ($page > 0) {
+						$HTML .= "<li".($info['selected'] ? " class='selected'" : null)."><a href='?st={$info['st']}'>{$page}</a></li>";
+					}
+				}
+				if ($pagination['last']) {
+					$HTML .= "<li><a href='?st={$pagination['last']['st']}'>&raquo;</a></li>";
+				}
 			}
 $HTML .= <<<HTML
 	</ul>
