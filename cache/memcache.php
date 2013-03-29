@@ -72,7 +72,7 @@ class mouseCacheMemcache extends Memcache {
 											$server['host'],
 											(is_numeric($server['port']) ? intval($server['port']) : 11211),
 											(is_bool($server['persistent']) ? $server['persistent'] : true),
-											(is_numeric($server['weight']) ? intval($server['weight']) : 0),
+											(is_numeric($server['weight']) ? intval($server['weight']) : 1),
 											(is_numeric($server['timeout']) ? intval($server['timeout']) : 1),
 											(is_numeric($server['retry_interval']) ? intval($server['retry_interval']) : 15),
 											(is_bool($server['status']) ? intval($server['status']) : 15),
