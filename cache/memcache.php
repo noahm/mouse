@@ -15,13 +15,6 @@
 
 class mouseCacheMemcache extends Memcache {
 	/**
-	 * Memcache Connection
-	 *
-	 * @var		resource
-	 */
-	private $memcache_link;
-
-	/**
 	 * Memory cached Memcache results.
 	 *
 	 * @var		array
@@ -83,8 +76,7 @@ class mouseCacheMemcache extends Memcache {
 											(is_numeric($server['timeout']) ? intval($server['timeout']) : 1),
 											(is_numeric($server['retry_interval']) ? intval($server['retry_interval']) : 15),
 											(is_bool($server['status']) ? intval($server['status']) : 15),
-											(is_array($server['failure_callback']) ? $server['failure_callback'] : null),
-											(is_numeric($server['timeoutms']) ? intval($server['timeoutms']) : 1)
+											(is_array($server['failure_callback']) ? $server['failure_callback'] : null)
 											);
 				if ($success == true) {
 					$return = true;
