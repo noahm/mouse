@@ -60,8 +60,22 @@ class mouseConfigMediawiki {
 
 		if (count($wgMemCachedServers)) {
 			list($server, $port) = explode(':', $wgMemCachedServers[0]);
-			mouseHole::$settings['memcache']['server']			= $server;
-			mouseHole::$settings['memcache']['port']			= $port;
+			foreach ($wgMemCachedServers as $server) {
+				if (is_string($server)) {
+					list($host, $port) = explode(':', $server);
+					mouseHole::$settings['memcache']['servers'][] = array(
+																			'host'	=> $host,
+																			'port'	=> $port
+																		);
+				} elseif (is_array($server)) {
+					list($host, $port) = explode(':', $server[0]);
+					mouseHole::$settings['memcache']['servers'][] = array(
+																			'host'		=> $host,
+																			'port'		=> $port,
+																			'weight'	=> $server[1]
+																		);
+				}
+			}
 			mouseHole::$settings['memcache']['use_memcache']	= true;
 		}
 
