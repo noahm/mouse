@@ -54,7 +54,7 @@ class mouseRequestCli {
 	 * @return	mixed	Cleaned value
 	 */
 	private function cleanRequestValue($value) {
-		if (is_numeric($value) AND preg_match('#[\.|\+|-|e|E]#s', $value)) {
+		if (is_numeric($value) && preg_match('#[\.|\+|-|e|E]#s', $value)) {
 			return floatval($value);
 		} elseif (is_numeric($value)) {
 			return intval($value);
@@ -71,7 +71,7 @@ class mouseRequestCli {
 	 * @return	void
 	 */
 	public function setupAliases($aliases) {
-		if (count($aliases) and is_array($aliases)) {
+		if (count($aliases) && is_array($aliases)) {
 			foreach ($aliases as $key => $value) {
 				$this->get[$value]		= $this->get[$key];
 				$this->post[$value]		= $this->post[$key];

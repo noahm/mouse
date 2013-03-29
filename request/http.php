@@ -53,11 +53,11 @@ class mouseRequestHttp {
 	 * @return	mixed	Cleaned value
 	 */
 	private function cleanRequestValue($value) {
-		if (is_numeric($value) AND preg_match('#[\.|\+|-|e|E]#s', $value)) {
+		if (is_numeric($value) && preg_match('#[\.|\+|-|e|E]#s', $value)) {
 			return floatval($value);
 		} elseif (is_numeric($value)) {
 			return intval($value);
-		} elseif (is_array($value) and count($value)) {
+		} elseif (is_array($value) && count($value)) {
 			foreach ($value as $subvalue) {
 				$array[] = $this->cleanRequestValue($subvalue);
 			}

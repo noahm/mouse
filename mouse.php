@@ -102,7 +102,7 @@ class mouseHole {
 			//Reseting the settings array if it gets messed up.
 			self::$settings = array();
 		}
-		if (count($settings) and is_array($settings)) {
+		if (count($settings) && is_array($settings)) {
 			self::$settings = array_merge(self::$settings, $settings);
 		}
 	}
@@ -120,7 +120,7 @@ class mouseHole {
 				if (in_array($key, self::$reservedKeys)) {
 					throw new Exception("Mouse modules can not be assigned to certain reserved key words.  Attempted to load: {$key} => {$className}");
 				}
-				if (!property_exists($this, $key) or !$this->$key instanceof $className) {
+				if (!property_exists($this, $key) || !$this->$key instanceof $className) {
 					$this->$key = new $className($key);
 					$this->loadedClasses[$key] = $className;
 				}
@@ -138,7 +138,7 @@ class mouseHole {
 	public function getClassByName($className) {
 		$key = array_search($className, $this->loadedClasses);
 
-		if ($key and property_exists($this, $key) and $this->$key instanceof $className) {
+		if ($key && property_exists($this, $key) && $this->$key instanceof $className) {
 			return $this->$key;
 		}
 		return null;
@@ -156,7 +156,7 @@ class mouseHole {
 
 		if (count($keys)) {
 			foreach ($keys as $key) {
-				if ($key and property_exists($this, $key) and $this->$key instanceof $className) {
+				if ($key && property_exists($this, $key) && $this->$key instanceof $className) {
 					$objects[] = $this->$key;
 				}
 			}

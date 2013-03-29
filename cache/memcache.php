@@ -56,9 +56,7 @@ class mouseCacheMemcache extends Memcache {
 
 		//Automatic enable.
 		if ($this->settings['use_memcache']) {
-			$this->enabled	= $this->init();
-		} else {
-			$this->enabled	= false;
+			$this->init();
 		}
 
 		if (is_bool($this->settings['use_ramcache'])) {
@@ -67,25 +65,36 @@ class mouseCacheMemcache extends Memcache {
 	}
 
 	/**
-	 * Magic call function to map $mouse->memcache->command() calls to Memcache::command().
+	 * Automatically initiate memcache connection.  Utilizes the addServer() function with arguments named the same in the settings.  At least one server must be valid to return true.
 	 *
 	 * @access	public
-	 * @param	string	Called magic function name.
-	 * @param	array	Array of arguments.
-	 * @return	mixed
-	 */
-	public function __call($function, $arguments) {
-		return call_user_func_array(array('Memcache', $function), $arguments);
-	}
-
-	/**
-	 * Automatically initiate memcache connection.
-	 *
-	 * @access	public
-	 * @return	void
+	 * @return	boolean	Connection Success
 	 */
 	public function init() {
-		return @$this->connect($this->settings['server'], $this->settings['port']);
+		$return = false;
+		if (is_array($this->settings['servers']) && count($this->settings['servers']) && array_key_exists('host', $this->settings['servers'][0])) {
+			foreach ($this->settings['servers'] as $server) {
+				//So, I wanted to be fancy and use this line, but if the programmer puts the information out of order in the array then the arguments will be out of order.  "call_user_func_array(array($this, 'addServer'), $host);"
+				$success = $this->addServer(
+											$server['host'],
+											(is_numeric($server['port']) ? intval($server['port']) : 11211),
+											(is_bool($server['persistent']) ? $server['persistent'] : true),
+											(is_numeric($server['weight']) ? intval($server['weight']) : 0),
+											(is_numeric($server['timeout']) ? intval($server['timeout']) : 1),
+											(is_numeric($server['retry_interval']) ? intval($server['retry_interval']) : 15),
+											(is_bool($server['status']) ? intval($server['status']) : 15),
+											(is_array($server['failure_callback']) ? $server['failure_callback'] : null),
+											(is_numeric($server['timeoutms']) ? intval($server['timeoutms']) : 1)
+											);
+				if ($success == true) {
+					$return = true;
+				}
+			}
+		}
+
+		$this->enabled = $return;
+
+		return $return;
 	}
 
 	/**
@@ -129,7 +138,7 @@ class mouseCacheMemcache extends Memcache {
 	 * @return	mixed
 	 */
 	public function add($key, $var, $flags, $expire) {
-		return Memcache::add($this->settings['prefix'].$key, $var, $flags, $expire);
+		return parent::add($this->settings['prefix'].$key, $var, $flags, $expire);
 	}
 
 	/**
@@ -140,7 +149,7 @@ class mouseCacheMemcache extends Memcache {
 	 * @return	mixed
 	 */
 	public function delete($key) {
-		return Memcache::delete($this->settings['prefix'].$key);
+		return parent::delete($this->settings['prefix'].$key);
 	}
 
 	/**
@@ -159,7 +168,7 @@ class mouseCacheMemcache extends Memcache {
 			}
 		} else {
 			$prefixedKey = $this->settings['prefix'].$key;
-			if ($this->useRAMCache and array_key_exists($prefixedKey, $this->RAMcache)) {
+			if ($this->useRAMCache && array_key_exists($prefixedKey, $this->RAMcache)) {
 				if ($this->RAMcache[$prefixedKey]['expire'] < time()) {
 					return $this->RAMcache[$prefixedKey]['value'];
 				} else {
@@ -168,7 +177,7 @@ class mouseCacheMemcache extends Memcache {
 			}
 		}
 
-		return Memcache::get($prefixedKey, $flags);
+		return parent::get($prefixedKey, $flags);
 	}
 
 	/**
@@ -184,9 +193,9 @@ class mouseCacheMemcache extends Memcache {
 	public function set($key, $var, $flags, $expire) {
 		$prefixedKey = $this->settings['prefix'].$key;
 
-		$return = Memcache::set($prefixedKey, $var, $flags, $expire);
+		$return = parent::set($prefixedKey, $var, $flags, $expire);
 
-		if ($return and $this->useRAMCache) {
+		if ($return && $this->useRAMCache) {
 			$this->RAMcache[$prefixedKey] = array(
 													'value' => $var,
 													'expire' => ($expire <= 2592000 ? time() + $expire : $expire)
@@ -207,10 +216,10 @@ class mouseCacheMemcache extends Memcache {
 	public function decrement($key, $amount = -1) {
 		$prefixedKey = $this->settings['prefix'].$key;
 
-		$return = Memcache::decrement($prefixedKey, $amount);
+		$return = parent::decrement($prefixedKey, $amount);
 
-		if ($this->useRAMCache and array_key_exists($prefixedKey, $this->RAMcache)) {
-			if ($this->RAMcache[$prefixedKey]['expire'] < time() and $return !== false) {
+		if ($this->useRAMCache && array_key_exists($prefixedKey, $this->RAMcache)) {
+			if ($this->RAMcache[$prefixedKey]['expire'] < time() && $return !== false) {
 				$this->RAMcache[$prefixedKey]['value'] = $return;
 			} else {
 				unset($this->RAMcache[$prefixedKey]);
@@ -231,10 +240,10 @@ class mouseCacheMemcache extends Memcache {
 	public function increment($key, $amount = 1) {
 		$prefixedKey = $this->settings['prefix'].$key;
 
-		$return = Memcache::increment($prefixedKey, $amount);
+		$return = parent::increment($prefixedKey, $amount);
 
-		if ($this->useRAMCache and array_key_exists($prefixedKey, $this->RAMcache)) {
-			if ($this->RAMcache[$prefixedKey]['expire'] < time() and $return !== false) {
+		if ($this->useRAMCache && array_key_exists($prefixedKey, $this->RAMcache)) {
+			if ($this->RAMcache[$prefixedKey]['expire'] < time() && $return !== false) {
 				$this->RAMcache[$prefixedKey]['value'] = $return;
 			} else {
 				unset($this->RAMcache[$prefixedKey]);

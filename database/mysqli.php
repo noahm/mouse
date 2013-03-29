@@ -101,7 +101,7 @@ class mouseDatabaseMysqli {
 	 */
 	public function connect($server, $user, $pass, $db, $port) {
 		$success = @$this->mysqli->real_connect(($this->settings['persistent'] ? 'p:' : null).$server, $user, $pass, $db, $port);
-		if (!$success or $this->mysqli->connect_error) {
+		if (!$success || $this->mysqli->connect_error) {
 			$this->dbError();
 		} else {
 			$this->connected = true;
@@ -144,7 +144,7 @@ class mouseDatabaseMysqli {
 		$from = array();
 		$left = array();
 
-		if (array_key_exists('add_join', $data) and is_array($data['add_join'])) {
+		if (array_key_exists('add_join', $data) && is_array($data['add_join'])) {
 			foreach ($data['add_join'] as $key => $join) {
 				($join['select'] ? $select[] = $join['select'] : null);
 				($join['where'] ? $where[] = $join['where'] : null);
@@ -178,7 +178,7 @@ class mouseDatabaseMysqli {
 			$query .= ' ORDER BY '.$data['order'];
 		}
 
-		if (array_key_exists('limit', $data) and is_array($data['limit'])) {
+		if (array_key_exists('limit', $data) && is_array($data['limit'])) {
 			if (count($data['limit']) == 2) {
 				$query .= ' LIMIT '.$data['limit'][0].','.$data['limit'][1];
 			} elseif (count($data['limit']) == 1) {
@@ -250,7 +250,7 @@ class mouseDatabaseMysqli {
 	public function insert($table, $data = array()) {
 		$table = $this->settings['prefix'].$table;
 
-		if (!is_array($data) or !count($data)) {
+		if (!is_array($data) || !count($data)) {
 			return false;
 		}
 
@@ -279,7 +279,7 @@ class mouseDatabaseMysqli {
 		$table = $this->settings['prefix'].$table;
 
 		foreach ($data as $field => $value) {
-			if (is_numeric($value) and !is_infinite($value)) {
+			if (is_numeric($value) && !is_infinite($value)) {
 				$set[] = $field.' = '.floatval($value);
 			} elseif ($value === null) {
 				$set[] = $field." = NULL";
@@ -397,9 +397,9 @@ class mouseDatabaseMysqli {
 	 * @return	mixed
 	 */
 	public function fetch($query = null, $resultType = null) {
-		if (!$query instanceof mysqli_result and !$this->queryResult instanceof mysqli_result) {
+		if (!$query instanceof mysqli_result && !$this->queryResult instanceof mysqli_result) {
 			return false;
-		} elseif (!$query instanceof mysqli_result and $this->queryResult instanceof mysqli_result) {
+		} elseif (!$query instanceof mysqli_result && $this->queryResult instanceof mysqli_result) {
 			$query = $this->queryResult;
 		}
 

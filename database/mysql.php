@@ -197,7 +197,7 @@ class mouseDatabaseMysql {
 	public function insert($table, $data = array()) {
 		$table = $this->settings['prefix'].$table;
 
-		if (!is_array($data) or !count($data)) {
+		if (!is_array($data) || !count($data)) {
 			return false;
 		}
 
@@ -228,7 +228,7 @@ class mouseDatabaseMysql {
 		$table = $this->settings['prefix'].$table;
 		
 		foreach ($data as $field => $value) {
-			if (is_numeric($value) and !is_infinite($value)) {
+			if (is_numeric($value) && !is_infinite($value)) {
 				$set[] = $field.' = '.floatval($value);
 			} elseif ($value === null) {
 				$set[] = $field." = NULL";
@@ -312,9 +312,9 @@ class mouseDatabaseMysql {
 	 * @return	mixed
 	 */
 	public function fetch($query = null) {
-		if (!$query and !$this->queryResult) {
+		if (!$query && !$this->queryResult) {
 			return false;
-		} elseif (!$query and $this->queryResult) {
+		} elseif (!$query && $this->queryResult) {
 			$query = $this->queryResult;
 		}
 		return mysql_fetch_array($query);

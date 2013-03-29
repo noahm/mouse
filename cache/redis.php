@@ -97,7 +97,7 @@ class mouseCacheRedis {
 			return $this->redisInitialized;
 		}
 
-		if ($this->settings['use_redis'] == 1 and $this->settings['servers']) {
+		if ($this->settings['use_redis'] == 1 && $this->settings['servers']) {
 			include_once('Predis/Autoloader.php');
 			Predis\Autoloader::register();
 			if (class_exists('Predis\Client')) {

@@ -83,7 +83,7 @@ class mouseTransferCurl {
 
 		$response_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
-		if ($response_code == 503 or $response_code == 404) {
+		if ($response_code == 503 || $response_code == 404) {
 			return false;
 		}
 
