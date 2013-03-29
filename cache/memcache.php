@@ -125,12 +125,23 @@ class mouseCacheMemcache extends Memcache {
 	 * @access	public
 	 * @param	string	Key for stored item
 	 * @param	mixed	Item to store
-	 * @param	mixed	Memcache flags
-	 * @param	integer	Seconds until expiration
+	 * @param	mixed	[Optional] Memcache flags
+	 * @param	integer	[Optional] Seconds until expiration
 	 * @return	mixed
 	 */
-	public function add($key, $var, $flags, $expire) {
-		return parent::add($this->settings['prefix'].$key, $var, $flags, $expire);
+	public function add($key, $var, $flags = null, $expire = 0) {
+		$prefixedKey = $this->settings['prefix'].$key;
+
+		$return = parent::add($prefixedKey, $var, $flags, $expire);
+
+		if ($return && $this->useRAMCache) {
+			$this->RAMcache[$prefixedKey] = array(
+													'value' => $var,
+													'expire' => ($expire <= 2592000 ? time() + $expire : $expire)
+												);
+		}
+
+		return $return;
 	}
 
 	/**
@@ -178,11 +189,11 @@ class mouseCacheMemcache extends Memcache {
 	 * @access	public
 	 * @param	string	Key for stored item
 	 * @param	mixed	Item to store
-	 * @param	mixed	Memcache flags
-	 * @param	integer	Seconds until expiration
+	 * @param	mixed	[Optional] Memcache flags
+	 * @param	integer	[Optional] Seconds until expiration
 	 * @return	boolean	True on success, false on failure.
 	 */
-	public function set($key, $var, $flags, $expire) {
+	public function set($key, $var, $flags = null, $expire = 0) {
 		$prefixedKey = $this->settings['prefix'].$key;
 
 		$return = parent::set($prefixedKey, $var, $flags, $expire);
