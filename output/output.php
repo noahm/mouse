@@ -273,12 +273,12 @@ class mouseOutputOutput {
 	 * @param	integer	Number of extra page numbers to show.
 	 * @return	array	Generated array of pagination information.
 	 */
-	public function generatePagination($totalItems, $itemsPerPage = 100, $start = 0, $extraPages = 4) {
+	public function generatePagination($totalItems, $itemsPerPage = 100, $itemStart = 0, $extraPages = 4) {
 		if ($totalItems < 1) {
 			return false;
 		}
 
-		$currentPage	= floor($start / $itemsPerPage) + 1;
+		$currentPage	= floor($itemStart / $itemsPerPage) + 1;
 		$totalPages		= ceil($totalItems / $itemsPerPage);
 		$lastStart		= floor($totalItems / $itemsPerPage) * $itemsPerPage - $itemsPerPage;
 
@@ -286,20 +286,22 @@ class mouseOutputOutput {
 		$pagination['last']	= array('st' => $lastStart, 'selected' => false);
 		$pagination['stats']	= array('pages' => $totalPages, 'total' => $totalItems, 'current_page' => $currentPage);
 
-		$start	= min($currentPage, $currentPage - ($extraPages / 2));
-		$end	= min($totalPages, $currentPage + ($extraPages / 2));
+		$pageStart	= min($currentPage, $currentPage - ($extraPages / 2));
+		$pageEnd	= min($totalPages, $currentPage + ($extraPages / 2));
 
-		if ($start <= 1) {
-			$start = 1;
-			$end = $start + $extraPages;
+		if ($pageStart <= 1) {
+			$pageStart = 1;
+			$pageEnd = $pageStart + $extraPages;
 		}
-		if ($end >= $totalPages) {
-			$end = $totalPages;
-			$start = max($end - $extraPages, ($currentPage - ($extraPages / 2)) - (($extraPages / 2) - ($end - $currentPage)));
+		if ($pageEnd >= $totalPages) {
+			$pageEnd = $totalPages;
+			$pageStart = max($pageEnd - $extraPages, ($currentPage - ($extraPages / 2)) - (($extraPages / 2) - ($pageEnd - $currentPage)));
 		}
 
-		for ($i = $start; $i <= $end; $i++) {
-			$pagination['pages'][$i] = array('st' => ($i * $itemsPerPage) - $itemsPerPage, 'selected' => ($i == $currentPage ? true : false));
+		for ($i = $pageStart; $i <= $pageEnd; $i++) {
+			if ($i > 0) {
+				$pagination['pages'][$i] = array('st' => ($i * $itemsPerPage) - $itemsPerPage, 'selected' => ($i == $currentPage ? true : false));
+			}
 		}
 
 		return $pagination;
