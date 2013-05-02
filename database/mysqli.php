@@ -255,7 +255,6 @@ class mouseDatabaseMysqli {
 		}
 
 		foreach ($data as $field => $value) {
-
 			if ($value === null) {
 				$fields[] = $field;
 				$values[] = "NULL";
@@ -265,7 +264,7 @@ class mouseDatabaseMysqli {
 			}
 		}
 
-		$this->generatedQuery = 'INSERT INTO '.$table.' ('.implode(', ', $fields).') VALUES ('.implode(', ', $values).')';
+		$this->generatedQuery = 'INSERT INTO '.$table.' (`'.implode('`, `', $fields).'`) VALUES ('.implode(', ', $values).')';
 
 		$result = $this->query($this->generatedQuery);
 
@@ -286,9 +285,9 @@ class mouseDatabaseMysqli {
 
 		foreach ($data as $field => $value) {
 			if ($value === null) {
-				$set[] = $field." = NULL";
+				$set[] = '`'.$field."` = NULL";
 			} else {
-				$set[] = $field." = '".$this->escapeString($value)."'";
+				$set[] = '`'.$field."` = '".$this->escapeString($value)."'";
 			}
 		}
 

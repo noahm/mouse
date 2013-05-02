@@ -202,11 +202,16 @@ class mouseDatabaseMysql {
 		}
 
 		foreach ($data as $field => $value) {
-			$fields[] = $field;
-			$values[] = "'".$this->escapeString($value)."'";
+			if ($value === null) {
+				$fields[] = $field;
+				$values[] = "NULL";
+			} else {
+				$fields[] = $field;
+				$values[] = "'".$this->escapeString($value)."'";
+			}
 		}
 
-		$this->generatedQuery = 'INSERT INTO '.$table.' ('.implode(', ', $fields).') VALUES ('.implode(', ', $values).')';
+		$this->generatedQuery = 'INSERT INTO '.$table.' (`'.implode('`, `', $fields).'`) VALUES ('.implode(', ', $values).')';
 
 		$result = $this->query($this->generatedQuery);
 		if (!$result) {
@@ -228,12 +233,10 @@ class mouseDatabaseMysql {
 		$table = $this->settings['prefix'].$table;
 		
 		foreach ($data as $field => $value) {
-			if (is_numeric($value) && !is_infinite($value)) {
-				$set[] = $field.' = '.floatval($value);
-			} elseif ($value === null) {
-				$set[] = $field." = NULL";
+			if ($value === null) {
+				$set[] = '`'.$field."` = NULL";
 			} else {
-				$set[] = $field." = '".$this->escapeString($value)."'";
+				$set[] = '`'.$field."` = '".$this->escapeString($value)."'";
 			}
 		}
 		
