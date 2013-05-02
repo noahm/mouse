@@ -255,8 +255,14 @@ class mouseDatabaseMysqli {
 		}
 
 		foreach ($data as $field => $value) {
-			$fields[] = $field;
-			$values[] = "'".$this->escapeString($value)."'";
+
+			if ($value === null) {
+				$fields[] = $field;
+				$values[] = "NULL";
+			} else {
+				$fields[] = $field;
+				$values[] = "'".$this->escapeString($value)."'";
+			}
 		}
 
 		$this->generatedQuery = 'INSERT INTO '.$table.' ('.implode(', ', $fields).') VALUES ('.implode(', ', $values).')';
@@ -279,9 +285,7 @@ class mouseDatabaseMysqli {
 		$table = $this->settings['prefix'].$table;
 
 		foreach ($data as $field => $value) {
-			if (is_numeric($value) && !is_infinite($value)) {
-				$set[] = $field.' = '.floatval($value);
-			} elseif ($value === null) {
+			if ($value === null) {
 				$set[] = $field." = NULL";
 			} else {
 				$set[] = $field." = '".$this->escapeString($value)."'";
