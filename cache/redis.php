@@ -103,7 +103,7 @@ class mouseCacheRedis {
 			if (class_exists('Predis\Client')) {
 				$options = array();
 				if ($this->settings['prefix']) {
-					$options['prefix'] = $this->settings['prefix'].':';
+					$options['prefix'] = $this->settings['prefix'];
 				}
 				$this->redis = new Predis\Client($this->settings['servers'], $options);
 
