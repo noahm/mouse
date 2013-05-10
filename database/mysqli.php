@@ -329,6 +329,24 @@ class mouseDatabaseMysqli {
 	}
 
 	/**
+	 * Database Truncate
+	 *
+	 * @access	public
+	 * @param	string	Table name
+	 * @return	boolean
+	 */
+	public function truncate($table) {
+		$table = $this->settings['prefix'].$table;
+
+		$query = 'TRUNCATE TABLE '.$table;
+
+		$this->generatedQuery = $query;
+		$result = $this->query($this->generatedQuery);
+
+		return $result;
+	}
+
+	/**
 	 * Begin a Transaction
 	 *
 	 * @access	public

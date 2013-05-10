@@ -282,6 +282,24 @@ class mouseDatabaseMysql {
 	}
 
 	/**
+	 * Database Truncate
+	 *
+	 * @access	public
+	 * @param	string	Table name
+	 * @return	boolean
+	 */
+	public function truncate($table) {
+		$table = $this->settings['prefix'].$table;
+
+		$query = 'TRUNCATE TABLE '.$table;
+
+		$this->generatedQuery = $query;
+		$result = $this->query($this->generatedQuery);
+
+		return $result;
+	}
+
+	/**
 	 * Escape value to use in a query
 	 *
 	 * @access	public
