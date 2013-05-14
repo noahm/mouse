@@ -475,7 +475,7 @@ class mouseOutputOutput {
 
 		$currentPage	= floor($itemStart / $itemsPerPage) + 1;
 		$totalPages		= ceil($totalItems / $itemsPerPage);
-		$lastStart		= floor($totalItems / $itemsPerPage) * $itemsPerPage - $itemsPerPage;
+		$lastStart		= floor($totalItems / $itemsPerPage) * $itemsPerPage;
 
 		$pagination['first']	= array('st' => 0, 'selected' => false);
 		$pagination['last']	= array('st' => $lastStart, 'selected' => false);
