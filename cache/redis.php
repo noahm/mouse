@@ -87,7 +87,7 @@ class mouseCacheRedis {
 	}
 
 	/**
-	 * Automatically initiate memcache connection.
+	 * Automatically initiate Redis connection.
 	 *
 	 * @access	public
 	 * @return	void
