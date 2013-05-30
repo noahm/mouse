@@ -173,19 +173,28 @@ class mouseOutputOutput {
 	 * @access	public
 	 * @param	string	[Optional] Text to send.
 	 * @param	integer	[Optional] UTC Timestamp to prepend to the line.
-	 * @return	void
+	 * @return	boolean	Successfully sent, false if we are not on the CLI.
 	 */
 	public function sendLine($text = '', $timestamp = null) {
+		if (PHP_SAPI != 'cli') {
+			return false;
+		}
+
 		echo $this->formatLine($text, $timestamp)."\n";
+
+		return true;
 	}
 
 	/**
 	 * Sends provided string to CLI appended to existing addLine() buffer.  Automatically sets up line breaks.
 	 *
 	 * @access	public
-	 * @return	integer	Number of lines sent.
+	 * @return	mixed	Integer number of lines sent or false if we are not on the CLI.
 	 */
 	public function sendLineBuffer() {
+		if (PHP_SAPI != 'cli') {
+			return false;
+		}
 		$totalLines = count(self::$lineBuffer);
 		if ($totalLines) {
 			foreach (self::$lineBuffer as $string) {
