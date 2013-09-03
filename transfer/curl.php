@@ -22,6 +22,13 @@ class mouseTransferCurl {
 	public $objectKey;
 
 	/**
+	 * Last debug output of request information.
+	 *
+	 * @var		mixed	Associative array of request information or false on failure.
+	 */
+	private $lastRequestInfo = false;
+
+	/**
 	 * Constructor
 	 *
 	 * @access	public
@@ -34,15 +41,17 @@ class mouseTransferCurl {
 	}
 
 	/**
-	 * CURL wrapper for get and post functionality.
+	 * CURL wrapper for get and post functionality. Some options are only configured by settings at load time:
+	 * array('interface' => eth1, 'useragent' => 'Custom Agent/1.0') interface: Physical interface to use on the hardware level.  useragent: Replace the default Mouse Framework user agent string.
 	 *
 	 * @access	public
 	 * @param	string	URL to CURL
 	 * @param	array	[Optional] Post Fields, must be an array of key => value pairs.
-	 * @param	array	[Optional] Options array('reuse' => false, 'interface' => eth1, 'useragent' => 'Custom Agent/1.0') reuse: Reuse connection for keep-alive, false by default.  interface: Physical interface to use on the hardware level.  useragent: Replace the default Mouse Framework user agent string.
+	 * @param	array	[Optional] Options array('reuse' => false, 'headers' => array('cs-api-key: abcd123')) reuse: Reuse connection for keep-alive, false by default.  headers: Array of http header strings
+	 * @param	boolean	Turn on various debug functionality such as saving information with the CURLINFO_HEADER_OUT option.
 	 * @return	mixed	Raw page text/HTML or false for a 404/503 response.
 	 */
-	public function fetch($location, $postFields = array(), $options = array()) {
+	public function fetch($location, $postFields = array(), $options = array(), $debug = false) {
 		if (!$ch) {
 			$ch = curl_init();
 		}
@@ -55,6 +64,10 @@ class mouseTransferCurl {
 		}
 
 		$dateTime = gmdate("D, d M Y H:i:s", time())." GMT";
+		$headers = array('Date: '.$dateTime);
+		if (is_array($options['headers']) && count($options['headers'])) {
+			$headers = array_merge($headers, $options['headers']);
+		}
 
 		$curl_options = array(	CURLOPT_TIMEOUT			=> $timeout,
 								CURLOPT_USERAGENT		=> $useragent,
@@ -65,10 +78,10 @@ class mouseTransferCurl {
 								CURLOPT_COOKIEFILE		=> '/tmp/curlget',
 								CURLOPT_COOKIEJAR		=> '/tmp/curlget',
 								CURLOPT_RETURNTRANSFER	=> true,
-								CURLOPT_HTTPHEADER		=> array('Date: '.$dateTime)
+								CURLOPT_HTTPHEADER		=> $headers
 							);
 
-		if (count($postFields)) {
+		if (is_array($postFields) && count($postFields)) {
 			$curl_options[CURLOPT_POST]			= true;
 			$curl_options[CURLOPT_POSTFIELDS]	= $postFields;
 		}
@@ -79,7 +92,15 @@ class mouseTransferCurl {
 
 		curl_setopt_array($ch, $curl_options);
 
+		if ($debug === true) {
+			curl_setopt($ch, CURLINFO_HEADER_OUT, true);
+		}
+
 		$page = curl_exec($ch);
+
+		if ($debug === true) {
+			$this->lastRequestInfo = curl_getinfo($ch);
+		}
 
 		$response_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
@@ -91,6 +112,16 @@ class mouseTransferCurl {
 			curl_close($ch);
 		}
 		return $page;
+	}
+
+	/**
+	 * Return the last request information with debugging turned on.
+	 *
+	 * @access	public
+	 * @return	mixed	Associative array of request information or false on failure.
+	 */
+	public function getLastRequestInfo() {
+		return $this->lastRequestInfo;
 	}
 }
 ?>
