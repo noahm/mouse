@@ -69,17 +69,18 @@ class mouseTransferCurl {
 			$headers = array_merge($headers, $options['headers']);
 		}
 
-		$curl_options = array(	CURLOPT_TIMEOUT			=> $timeout,
-								CURLOPT_USERAGENT		=> $useragent,
-								CURLOPT_URL				=> $location,
-								CURLOPT_CONNECTTIMEOUT	=> $timeout,
-								CURLOPT_FOLLOWLOCATION	=> true,
-								CURLOPT_MAXREDIRS		=> 4,
-								CURLOPT_COOKIEFILE		=> '/tmp/curlget',
-								CURLOPT_COOKIEJAR		=> '/tmp/curlget',
-								CURLOPT_RETURNTRANSFER	=> true,
-								CURLOPT_HTTPHEADER		=> $headers
-							);
+		$curl_options = [
+			CURLOPT_TIMEOUT			=> $timeout,
+			CURLOPT_USERAGENT		=> $useragent,
+			CURLOPT_URL				=> $location,
+			CURLOPT_CONNECTTIMEOUT	=> $timeout,
+			CURLOPT_FOLLOWLOCATION	=> true,
+			CURLOPT_MAXREDIRS		=> 4,
+			CURLOPT_COOKIEFILE		=> '/tmp/curlget',
+			CURLOPT_COOKIEJAR		=> '/tmp/curlget',
+			CURLOPT_RETURNTRANSFER	=> true,
+			CURLOPT_HTTPHEADER		=> $headers
+		];
 
 		if (is_array($postFields) && count($postFields)) {
 			$curl_options[CURLOPT_POST]			= true;
