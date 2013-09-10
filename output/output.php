@@ -50,6 +50,13 @@ class mouseOutputOutput {
 	private $lineDateFormat = 'c';
 
 	/**
+	 * Ignore calls to sendLine and sendLineBuffer when not on the CLI
+	 *
+	 * @var		boolean
+	 */
+	protected $cliOutputOnly = true;
+
+	/**
 	 * Template Folder Locations
 	 *
 	 * @var		array
@@ -73,6 +80,29 @@ class mouseOutputOutput {
 	public function __construct($objectKey = 'http') {
 		$this->objectKey	= $objectKey;
 		$this->settings		=& mouseHole::$settings[$this->objectKey];
+	}
+
+	/**
+	 * Gets whether calls to sendLine and sendLineBuffer will be ignored
+	 *
+	 * @access	public
+	 * @return	boolean	Current template folders.
+	 */
+	public function getCliOnly() {
+		return $this->cliOutputOnly;
+	}
+
+	/**
+	 * Sets whether calls to sendLine and sendLineBuffer will be ignored
+	 *
+	 * @access	public
+	 * @param	boolean
+	 * @return	bool	the previous value
+	 */
+	public function setCliOnly($bool = true) {
+		$prev = $this->cliOutputOnly;
+		$this->cliOutputOnly = !!$bool;
+		return $prev;
 	}
 
 	/**
@@ -168,7 +198,8 @@ class mouseOutputOutput {
 	}
 
 	/**
-	 * Sends provided string to CLI immediately.  Automatically sets up line breaks.  Calling this function with no parameters will send a blank line.
+	 * Sends provided string to CLI immediately.  Automatically sets up line breaks.
+	 * Calling this function with no parameters will send a blank line.
 	 *
 	 * @access	public
 	 * @param	string	[Optional] Text to send.
@@ -176,7 +207,7 @@ class mouseOutputOutput {
 	 * @return	boolean	Successfully sent, false if we are not on the CLI.
 	 */
 	public function sendLine($text = '', $timestamp = null) {
-		if (PHP_SAPI != 'cli') {
+		if ($this->cliOutputOnly && PHP_SAPI != 'cli') {
 			return false;
 		}
 
@@ -192,7 +223,7 @@ class mouseOutputOutput {
 	 * @return	mixed	Integer number of lines sent or false if we are not on the CLI.
 	 */
 	public function sendLineBuffer() {
-		if (PHP_SAPI != 'cli') {
+		if ($this->cliOutputOnly && PHP_SAPI != 'cli') {
 			return false;
 		}
 		$totalLines = count(self::$lineBuffer);
@@ -261,12 +292,12 @@ class mouseOutputOutput {
 	}
 
 	/**
-	 * Set the format for lines to display.
+	 * Formats a lines for display according to the configured formats.
 	 *
 	 * @access	private
 	 * @param	string	Text to add.
 	 * @param	integer	UTC Timestamp to prepend to the line.
-	 * @return	void
+	 * @return	string
 	 */
 	private function formatLine($text, $timestamp) {
 		return ($timestamp ? sprintf($this->lineFormatWithTimestamp, $text, date($this->lineDateFormat, $timestamp)) : sprintf($this->lineFormat, $text));
