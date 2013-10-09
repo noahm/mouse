@@ -147,7 +147,7 @@ class mouseCacheRedis {
 	public function setSerialized($key, $data) {
 		$data = serialize($data);
 
-		$return = $this->redis->set($key, $data);
+		$return = $this->set($key, $data);
 		self::$cache[$key] = $data;
 
 		return $return;
@@ -164,7 +164,7 @@ class mouseCacheRedis {
 		if (self::$cache[$key]) {
 			return unserialize(self::$cache[$key]);
 		} else {
-			$data = $this->redis->get($key);
+			$data = $this->get($key);
 			if ($data) {
 				self::$cache[$key] = $data;
 			}
