@@ -229,14 +229,15 @@ class mouseDatabaseMysqli {
 	}
 
 	/**
-	 * Returns the number of rows from a select statement.
+	 * Returns the number of rows from a given select statement result or the most recent select statement
 	 *
 	 * @access	public
-	 * @param	object	Query Object
+	 * @param	object	[optional] Query Object
 	 * @return	integer
 	 */
-	public function getNumRows($result) {
-		return $this->queryResult->num_rows;
+	public function getNumRows($result = null) {
+		if ($result == null) $result = $this->queryResult;
+		return $result->num_rows;
 	}
 
 	/**
