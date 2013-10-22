@@ -75,7 +75,7 @@ class mouseTransferCurl {
 			CURLOPT_URL				=> $location,
 			CURLOPT_CONNECTTIMEOUT	=> $timeout,
 			CURLOPT_FOLLOWLOCATION	=> true,
-			CURLOPT_MAXREDIRS		=> 4,
+			CURLOPT_MAXREDIRS		=> 10,
 			CURLOPT_COOKIEFILE		=> '/tmp/curlget',
 			CURLOPT_COOKIEJAR		=> '/tmp/curlget',
 			CURLOPT_RETURNTRANSFER	=> true,
