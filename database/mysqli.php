@@ -499,5 +499,15 @@ class mouseDatabaseMysqli {
 	public function getResultType() {
 		return $this->resultType;
 	}
+
+	/**
+	 * Is this MySQLi thread safe?
+	 *
+	 * @access	public
+	 * @return	boolean
+	 */
+	public function isThreadSafe() {
+		return $this->mysqli->thread_safe();
+	}
 }
 ?>
