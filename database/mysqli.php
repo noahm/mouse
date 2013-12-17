@@ -186,6 +186,14 @@ class mouseDatabaseMysqli {
 			}
 		}
 
+		if (array_key_exists('for_update', $data) && $data['for_update'] === true) {
+			$query .= ' FOR UPDATE';
+		}
+
+		if (array_key_exists('lock_share_mode', $data) && $data['lock_share_mode'] === true) {
+			$query .= ' LOCK IN SHARE MODE';
+		}
+
 		$this->generatedQuery = $query;
 		$result = $this->query($this->generatedQuery);
 

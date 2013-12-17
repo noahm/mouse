@@ -101,7 +101,11 @@ class mouseDatabaseMysql {
 	 * @return	resource	Query resource
 	 */
 	public function select($data = array()) {
-		if (is_array($data['add_join'])) {
+		$where = array();
+		$from = array();
+		$left = array();
+
+		if (array_key_exists('add_join', $data) && is_array($data['add_join'])) {
 			foreach ($data['add_join'] as $key => $join) {
 				($join['select'] ? $select[] = $join['select'] : null);
 				($join['where'] ? $where[] = $join['where'] : null);
@@ -116,31 +120,39 @@ class mouseDatabaseMysql {
 				}
 			}
 		}
-		
+
 		($data['select'] ? $select[] = $data['select'] : null);
 		$from[] = $this->buildFrom($data['from']);
 		($data['where'] ? $where[] = $data['where'] : null);
 
 		$query = 'SELECT '.implode(', ', $select).' FROM '.implode(', ', $from).(count($left) ? ' '.implode(' ', $left) : '');
-		
-		if ($where) {
+
+		if (count($where)) {
 			$query .= ' WHERE '.implode(' AND ', $where);
 		}
 
-		if ($data['group']) {
+		if (array_key_exists('group', $data)) {
 			$query .= ' GROUP BY '.$data['group'];
 		}
 
-		if ($data['order']) {
+		if (array_key_exists('order', $data)) {
 			$query .= ' ORDER BY '.$data['order'];
 		}
 
-		if ($data['limit']) {
+		if (array_key_exists('limit', $data) && is_array($data['limit'])) {
 			if (count($data['limit']) == 2) {
 				$query .= ' LIMIT '.$data['limit'][0].','.$data['limit'][1];
 			} elseif (count($data['limit']) == 1) {
 				$query .= ' LIMIT '.$data['limit'][0];
 			}
+		}
+
+		if (array_key_exists('for_update', $data) && $data['for_update'] === true) {
+			$query .= ' FOR UPDATE';
+		}
+
+		if (array_key_exists('lock_share_mode', $data) && $data['lock_share_mode'] === true) {
+			$query .= ' LOCK IN SHARE MODE';
 		}
 
 		$this->generatedQuery = $query;
