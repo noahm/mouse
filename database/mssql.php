@@ -2,7 +2,7 @@
 /**
  * NoName Studios
  * Mouse Framework
- * Mouse Database MySQL - Interface to MySQL Data, provides automatic connection setup, and object oriented database calls.
+ * Mouse Database MsSQL - Interface to MsSQL Data, provides automatic connection setup, and object oriented database calls.
  *
  * @author 		Alexia E. Smith
  * @copyright	(c) 2010 - 2014 NoName Studios
@@ -13,13 +13,13 @@
  *
 **/
 
-class mouseDatabaseMysql {
+class mouseDatabaseMssql {
 	/**
-	 * MySQL Link
+	 * MsSQL Link
 	 *
 	 * @var		object
 	 */
-	private $mysql;
+	private $mssql;
 
 	/**
 	 * Object Key
@@ -29,7 +29,6 @@ class mouseDatabaseMysql {
 	public $objectKey;
 
 	/**
-	 * DEPRECATED
 	 * Constructor
 	 *
 	 * @access	public
@@ -60,7 +59,6 @@ class mouseDatabaseMysql {
 		}
 		$this->connect($this->settings['server'], $this->settings['user'], $this->settings['pass']);
 		$this->selectDatabase($this->settings['database']);
-		$this->query("SET NAMES utf8");
 		return true;
 	}
 
@@ -74,8 +72,8 @@ class mouseDatabaseMysql {
 	 * @return	void
 	 */
 	public function connect($server, $user, $pass) {
-		$this->mysql = @mysql_connect($server, $user, $pass, true);
-		if (!$this->mysql) {
+		$this->mssql = @mssql_connect($server, $user, $pass, true);
+		if (!$this->mssql) {
 			$this->dbError();
 		}
 	}
@@ -88,7 +86,7 @@ class mouseDatabaseMysql {
 	 * @return	void
 	 */
 	public function selectDatabase($database) {
-		if (!mysql_select_db($database, $this->mysql)) {
+		if (!mssql_select_db($database, $this->mssql)) {
 			$this->dbError();
 		}
 	}
@@ -184,7 +182,7 @@ class mouseDatabaseMysql {
 	 * @return	integer
 	 */
 	public function getInsertID() {
-		return mysql_insert_id($this->mysql);
+		return mssql_insert_id($this->mssql);
 	}
 
 	/**
@@ -195,7 +193,7 @@ class mouseDatabaseMysql {
 	 * @return	integer
 	 */
 	public function getNumRows($result) {
-		return mysql_num_rows($result);
+		return mssql_num_rows($result);
 	}
 
 	/**
@@ -319,7 +317,7 @@ class mouseDatabaseMysql {
 	 * @return	string	Escaped value
 	 */
 	public function escapeString($value) {
-		return mysql_real_escape_string($value, $this->mysql);
+		return mssql_real_escape_string($value, $this->mssql);
 	}
 
 	/**
@@ -330,7 +328,7 @@ class mouseDatabaseMysql {
 	 * @return	mixed
 	 */
 	public function query($query) {
-		$result = mysql_query($query, $this->mysql);
+		$result = mssql_query($query, $this->mssql);
 		if (is_resource($result)) {
 			$this->queryResult = $result;
 		}
@@ -350,11 +348,17 @@ class mouseDatabaseMysql {
 		} elseif (!$query && $this->queryResult) {
 			$query = $this->queryResult;
 		}
-		return mysql_fetch_array($query);
+		return mssql_fetch_array($query);
 	}
 
+	/**
+	 * Database Error Handler
+	 *
+	 * @access	public
+	 * @return	void
+	 */
 	public function dbError() {
-		throw new Exception(mysql_error()."\n".$this->generatedQuery."\n");
+		throw new Exception(mssql_get_last_message()."\n".$this->generatedQuery."\n");
 	}
 
 	/**
