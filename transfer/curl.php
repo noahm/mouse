@@ -47,7 +47,10 @@ class mouseTransferCurl {
 	 * @access	public
 	 * @param	string	URL to CURL
 	 * @param	array	[Optional] Post Fields, must be an array of key => value pairs.
-	 * @param	array	[Optional] Options array('reuse' => false, 'headers' => array('cs-api-key: abcd123')) reuse: Reuse connection for keep-alive, false by default.  headers: Array of http header strings
+	 * @param	array	[Optional] Options array('reuse' => false, 'headers' => array('cs-api-key: abcd123'))
+	 *					reuse: Reuse connection for keep-alive, false by default.
+	 *					headers: Array of http header strings
+	 *					username/password: use when http auth is required
 	 * @param	boolean	Turn on various debug functionality such as saving information with the CURLINFO_HEADER_OUT option.
 	 * @return	mixed	Raw page text/HTML or false for a 404/503 response.
 	 */
@@ -81,6 +84,11 @@ class mouseTransferCurl {
 			CURLOPT_RETURNTRANSFER	=> true,
 			CURLOPT_HTTPHEADER		=> $headers
 		];
+
+		if (isset($options['username']) && isset($options['password'])) {
+			$curl_options[CURLOPT_USERPWD] = $options['username'].':'.$options['password'];
+			$curl_options[CURLOPT_HTTPAUTH] = CURLAUTH_ANY;
+		}
 
 		if (is_array($postFields) && count($postFields)) {
 			$curl_options[CURLOPT_POST]			= true;
