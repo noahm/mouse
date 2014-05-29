@@ -150,12 +150,12 @@ class mouseDatabaseMysqli {
 				($join['where'] ? $where[] = $join['where'] : null);
 				switch ($join['type']) {
 					default:
-				 	case 'inner':
+					case 'inner':
 						$from[] = $this->buildFrom($join['from']);
-				        break;
+						break;
 					case 'left':
 						$left[] = 'LEFT JOIN '.$this->buildFrom($join['from']).' ON '.$join['on'];
-				        break;
+						break;
 				}
 			}
 		}
@@ -172,6 +172,10 @@ class mouseDatabaseMysqli {
 
 		if (array_key_exists('group', $data)) {
 			$query .= ' GROUP BY '.$data['group'];
+		}
+
+		if (array_key_exists('having', $data)) {
+			$query .= ' HAVING '.$data['having'];
 		}
 
 		if (array_key_exists('order', $data)) {
