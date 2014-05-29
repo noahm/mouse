@@ -77,7 +77,7 @@ class mouseUtilityArray {
 	 * @param	array	Array to search
 	 * @param	array	Subarray keys to search by.  This can be a one dimensional array of keys to check against for the search term.
 	 * @param	string	Value to search for.
-	 * @return	mixed	Array of search results.  Returns false for invalid paramters.
+	 * @return	mixed	Array of search results.  Returns false for invalid paramters or no results found.
 	 */
 	public function searchByKeyValue($array = [], $searchKeys = [], $searchTerm = '') {
 		if (!is_array($array) || !is_array($searchKeys)) {
@@ -85,7 +85,7 @@ class mouseUtilityArray {
 		}
 
 		$searchTerm = mb_strtolower($searchTerm, 'UTF-8');
-		$found = [];
+		$found = false;
 
 		foreach ($array as $key => $info) {
 			foreach ($searchKeys as $sKey) {
