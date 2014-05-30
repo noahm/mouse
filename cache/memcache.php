@@ -19,7 +19,7 @@ class mouseCacheMemcache extends Memcache {
 	 *
 	 * @var		array
 	 */
-	protected $RAMcache = array();
+	protected $RAMcache = [];
 
 	/**
 	 * Flag to enable memory cached Memcache results.
@@ -116,7 +116,7 @@ class mouseCacheMemcache extends Memcache {
 	 * @return	void
 	 */
 	public function flushRAMCache() {
-		$this->RAMCache = array();
+		$this->RAMCache = [];
 	}
 
 	/**

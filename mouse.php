@@ -26,21 +26,21 @@ class mouseHole {
 	 *
 	 * @var		array
 	 */
-	public static $settings = array();
+	public static $settings = [];
 
 	/**
 	 * Reserved Key Words - Generally anything defined up here before the functions.
 	 *
 	 * @var		array
 	 */
-	private static $reservedKeys = array('settings', 'version', 'iteration', 'instance');
+	private static $reservedKeys = ['settings', 'version', 'iteration', 'instance'];
 
 	/**
 	 * Currently loaded classes.
 	 *
 	 * @var		array
 	 */
-	private $loadedClasses = array();
+	private $loadedClasses = [];
 
 	/**
 	 * Mouse Framework Version
@@ -64,11 +64,11 @@ class mouseHole {
 	 * @param	array	[Optional] Array of settings.
 	 * @return	void
 	 */
-	private function __construct($classes = array(), $settings = array()) {
+	private function __construct($classes = [], $settings = []) {
 		//Define a constant mouse hole.
 		define('MOUSE_DIR', dirname(__FILE__));
 
-		spl_autoload_register(array($this, 'autoloadClass'), true, false);
+		spl_autoload_register([$this, 'autoloadClass'], true, false);
 
 		//Always load settings first.  Some classes require settings to be passed in first for successful setup.
 		if (count($settings)) {
@@ -100,7 +100,7 @@ class mouseHole {
 	public function loadSettings($settings) {
 		if (!is_array(self::$settings)) {
 			//Reseting the settings array if it gets messed up.
-			self::$settings = array();
+			self::$settings = [];
 		}
 		if (count($settings) && is_array($settings)) {
 			self::$settings = array_merge(self::$settings, $settings);
@@ -189,7 +189,7 @@ class mouseHole {
 	 * @param	array	[Optional] Array of settings.
 	 * @return	object	mouseHole
 	 */
-	static public function instance($classes = array(), $settings = array()) {
+	static public function instance($classes = [], $settings = []) {
 		if (!self::$instance) {
 			self::$instance = new self($classes, $settings);
 		} else {

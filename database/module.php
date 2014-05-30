@@ -22,7 +22,7 @@ class mouseDatabaseModule {
 	 * @param	array	[Optional] Array of settings.
 	 * @return	void
 	 */
-	private function __construct($classes = array(), $settings = array()) {
+	private function __construct($classes = [], $settings = []) {
 		//Define a constant mouse hole.
 		define('MOUSE_DIR', dirname(__FILE__));
 

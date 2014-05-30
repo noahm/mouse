@@ -57,7 +57,7 @@ class mouseDatabaseMysqli {
 			$this->settings['prefix'] = '';
 		}
 
-		if (in_array($this->settings['result_type'], array('array', 'object'))) {
+		if (in_array($this->settings['result_type'], ['array', 'object'])) {
 			$this->resultType = $this->settings['result_type'];
 		}
 
@@ -139,10 +139,10 @@ class mouseDatabaseMysqli {
 	 * @param	array		Array of data to build the select statement.
 	 * @return	resource	Query resource
 	 */
-	public function select($data = array()) {
-		$where = array();
-		$from = array();
-		$left = array();
+	public function select($data = []) {
+		$where = [];
+		$from = [];
+		$left = [];
 
 		if (array_key_exists('add_join', $data) && is_array($data['add_join'])) {
 			foreach ($data['add_join'] as $key => $join) {
@@ -260,7 +260,7 @@ class mouseDatabaseMysqli {
 	 * @param	array	Array of field to value data to be inserted.
 	 * @return	boolean
 	 */
-	public function insert($table, $data = array()) {
+	public function insert($table, $data = []) {
 		$table = $this->settings['prefix'].$table;
 
 		if (!is_array($data) || !count($data)) {
@@ -293,7 +293,7 @@ class mouseDatabaseMysqli {
 	 * @param	string	Where delimiter clause
 	 * @return	boolean
 	 */
-	public function update($table, $data = array(), $where = false) {
+	public function update($table, $data = [], $where = false) {
 		$table = $this->settings['prefix'].$table;
 
 		foreach ($data as $field => $value) {
@@ -437,7 +437,7 @@ class mouseDatabaseMysqli {
 			$query = $this->queryResult;
 		}
 
-		if (in_array($resultType, array('array', 'object'))) {
+		if (in_array($resultType, ['array', 'object'])) {
 			$_resultType = $resultType;
 		} else {
 			$_resultType = $this->resultType;
