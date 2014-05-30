@@ -61,7 +61,7 @@ class mouseOutputOutput {
 	 *
 	 * @var		array
 	 */
-	protected $templateFolders = array();
+	protected $templateFolders = [];
 
 	/**
 	 * Object Key
@@ -231,7 +231,7 @@ class mouseOutputOutput {
 			foreach (self::$lineBuffer as $string) {
 				echo $string."\n";
 			}
-			self::$lineBuffer = array();
+			self::$lineBuffer = [];
 		}
 		return $totalLines;
 	}
@@ -517,9 +517,9 @@ class mouseOutputOutput {
 		$totalPages		= ceil($totalItems / $itemsPerPage);
 		$lastStart		= floor($totalItems / $itemsPerPage) * $itemsPerPage;
 
-		$pagination['first']	= array('st' => 0, 'selected' => false);
-		$pagination['last']	= array('st' => $lastStart, 'selected' => false);
-		$pagination['stats']	= array('pages' => $totalPages, 'total' => $totalItems, 'current_page' => $currentPage);
+		$pagination['first']	= ['st' => 0, 'selected' => false];
+		$pagination['last']		= ['st' => $lastStart, 'selected' => false];
+		$pagination['stats']	= ['pages' => $totalPages, 'total' => $totalItems, 'current_page' => $currentPage];
 
 		$pageStart	= min($currentPage, $currentPage - ($extraPages / 2));
 		$pageEnd	= min($totalPages, $currentPage + ($extraPages / 2));
@@ -535,7 +535,7 @@ class mouseOutputOutput {
 
 		for ($i = $pageStart; $i <= $pageEnd; $i++) {
 			if ($i > 0) {
-				$pagination['pages'][$i] = array('st' => ($i * $itemsPerPage) - $itemsPerPage, 'selected' => ($i == $currentPage ? true : false));
+				$pagination['pages'][$i] = ['st' => ($i * $itemsPerPage) - $itemsPerPage, 'selected' => ($i == $currentPage ? true : false)];
 			}
 		}
 

@@ -100,10 +100,10 @@ class mouseDatabaseMysql {
 	 * @param	array		Array of data to build the select statement.
 	 * @return	resource	Query resource
 	 */
-	public function select($data = array()) {
-		$where = array();
-		$from = array();
-		$left = array();
+	public function select($data = []) {
+		$where = [];
+		$from = [];
+		$left = [];
 
 		if (array_key_exists('add_join', $data) && is_array($data['add_join'])) {
 			foreach ($data['add_join'] as $key => $join) {
@@ -174,7 +174,7 @@ class mouseDatabaseMysql {
 	 * @param	array	Array of data to build the select statement.
 	 * @return	boolean
 	 */
-	public function selectAndFetch($data = array()) {
+	public function selectAndFetch($data = []) {
 		$this->select($data);
 		$result = $this->fetch();
 		unset($this->queryResult);
@@ -210,7 +210,7 @@ class mouseDatabaseMysql {
 	 * @param	array	Array of field to value data to be inserted.
 	 * @return	boolean
 	 */
-	public function insert($table, $data = array()) {
+	public function insert($table, $data = []) {
 		$table = $this->settings['prefix'].$table;
 
 		if (!is_array($data) || !count($data)) {
@@ -245,7 +245,7 @@ class mouseDatabaseMysql {
 	 * @param	string	Where delimiter clause
 	 * @return	boolean
 	 */
-	public function update($table, $data = array(), $where = false) {
+	public function update($table, $data = [], $where = false) {
 		$table = $this->settings['prefix'].$table;
 
 		foreach ($data as $field => $value) {

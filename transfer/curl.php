@@ -55,7 +55,7 @@ class mouseTransferCurl {
 	 * @param	boolean	Turn on various debug functionality such as saving information with the CURLINFO_HEADER_OUT option.
 	 * @return	mixed	Raw page text/HTML or false for a 404/503 response.
 	 */
-	public function fetch($location, $postFields = array(), $options = array(), $debug = false) {
+	public function fetch($location, $postFields = [], $options = [], $debug = false) {
 		if (!$ch) {
 			$ch = curl_init();
 		}
@@ -68,7 +68,7 @@ class mouseTransferCurl {
 		}
 
 		$dateTime = gmdate("D, d M Y H:i:s", time())." GMT";
-		$headers = array('Date: '.$dateTime);
+		$headers = ['Date: '.$dateTime];
 		if (is_array($options['headers']) && count($options['headers'])) {
 			$headers = array_merge($headers, $options['headers']);
 		}
@@ -131,7 +131,7 @@ class mouseTransferCurl {
 	/**
 	 * Shortcut to fetch() with using a POST request instead of GET, even with empty post data
 	 */
-	public function post($location, $postFields = array(), $options = array(), $debug = false) {
+	public function post($location, $postFields = [], $options = [], $debug = false) {
 		$options['verb'] = 'POST';
 		if (empty($postFields)) {
 			$options['headers'][] = 'Content-Length: 0';

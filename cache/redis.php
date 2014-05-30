@@ -33,7 +33,7 @@ class mouseCacheRedis {
 	 *
 	 * @var		array
 	 */
-	protected static $cache = array();
+	protected static $cache = [];
 
 	/**
 	 * Object Key
@@ -101,7 +101,7 @@ class mouseCacheRedis {
 			include_once('Predis/Autoloader.php');
 			Predis\Autoloader::register();
 			if (class_exists('Predis\Client')) {
-				$options = array();
+				$options = [];
 				if ($this->settings['prefix']) {
 					$options['prefix'] = $this->settings['prefix'];
 				}
