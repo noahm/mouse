@@ -112,7 +112,7 @@ class mouseCacheRedis {
 
 				try {
 					$this->redis->connect();
-				} catch (Predis\Network\ConnectionException $e) {
+				} catch (Predis\Connection\ConnectionException $e) {
 					$this->redis = null;
 				} catch (Exception $e) {
 					$this->redis = null;
