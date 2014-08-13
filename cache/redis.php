@@ -73,9 +73,12 @@ class mouseCacheRedis {
 		if ($this->redisInitialized) {
 			try {
 				return call_user_func_array(array($this->redis, $function), $arguments);
-			} catch (Predis\Network\ConnectionException $e) {
-				$this->redisInitialized = false;
-				$this->redis = null;
+			} catch (Predis\Connection\ConnectionException $e) {
+				// attempt to re-establish a connection before trashing the redis object completely
+				if (!$this->redis->isConnected() && $this->redis->connect() && !$this->redis->isConnected()) {
+					$this->redisInitialized = false;
+					$this->redis = null;
+				}
 			} catch (Predis\NotSupportedException $e) {
 				$this->redisInitialized = false;
 				$this->redis = null;
@@ -109,7 +112,7 @@ class mouseCacheRedis {
 
 				try {
 					$this->redis->connect();
-				} catch (Predis\Network\ConnectionException $e) {
+				} catch (Predis\Connection\ConnectionException $e) {
 					$this->redis = null;
 				} catch (Exception $e) {
 					$this->redis = null;
