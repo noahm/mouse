@@ -14,7 +14,7 @@
 namespace mouse\database;
 use mouse;
 
-class module {
+abstract class module {
 	/**
 	 * MySQLi Instance
 	 *
