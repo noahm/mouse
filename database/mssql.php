@@ -39,7 +39,7 @@ class Mssql {
 	 */
 	public function __construct($objectKey = 'DB') {
 		$this->objectKey	= $objectKey;
-		$this->settings		=& mouse\Hole::$settings[$this->objectKey];
+		$this->settings		=& mouse\hole::$settings[$this->objectKey];
 
 		//Automatic enable.
 		if ($this->settings['use_database']) {

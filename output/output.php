@@ -81,7 +81,7 @@ class Output {
 	 */
 	public function __construct($objectKey = 'http') {
 		$this->objectKey	= $objectKey;
-		$this->settings		=& mouse\Hole::$settings[$this->objectKey];
+		$this->settings		=& mouse\hole::$settings[$this->objectKey];
 	}
 
 	/**

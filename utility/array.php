@@ -32,7 +32,7 @@ class Array {
 	 */
 	public function __construct($objectKey = 'array') {
 		$this->objectKey	= $objectKey;
-		$this->settings		=& mouse\Hole::$settings[$this->objectKey];
+		$this->settings		=& mouse\hole::$settings[$this->objectKey];
 	}
 
 	/**

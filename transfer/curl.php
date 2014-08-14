@@ -39,7 +39,7 @@ class Curl {
 	 */
 	public function __construct($objectKey = 'curl') {
 		$this->objectKey	= $objectKey;
-		$this->settings		=& mouse\Hole::$settings[$this->objectKey];
+		$this->settings		=& mouse\hole::$settings[$this->objectKey];
 	}
 
 	/**
@@ -66,7 +66,7 @@ class Curl {
 		if ($this->settings['useragent']) {
 			$useragent = $this->settings['useragent'];
 		} else {
-			$useragent = "Mouse Framework/".mouse\Hole::$version;
+			$useragent = "Mouse Framework/".mouse\hole::$version;
 		}
 
 		$dateTime = gmdate("D, d M Y H:i:s", time())." GMT";

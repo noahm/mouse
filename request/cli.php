@@ -32,7 +32,7 @@ class Cli {
 	 */
 	public function __construct($objectKey = 'cli') {
 		$this->objectKey	= $objectKey;
-		$this->settings		=& mouse\Hole::$settings[$this->objectKey];
+		$this->settings		=& mouse\hole::$settings[$this->objectKey];
 
 		global $argv;
 		if (count($argv)) {

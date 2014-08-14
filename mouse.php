@@ -15,7 +15,7 @@
 
 namespace mouse;
 
-class Hole {
+class hole {
 	/**
 	 * Mouse Instance
 	 *
@@ -205,7 +205,7 @@ class Hole {
 	 * @access	public
 	 * @param	array	[Optional] Array of object keys to classes to autoload.
 	 * @param	array	[Optional] Array of settings.
-	 * @return	object	Hole
+	 * @return	object	hole
 	 */
 	static public function instance($classes = [], $settings = []) {
 		if (!self::$instance) {

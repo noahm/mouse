@@ -33,7 +33,7 @@ class Mediawiki {
 	public function __construct($objectKey = 'mediawiki') {
 		//This Mediawiki configuration object is a prototype bridge between a Mediawiki LocalSettings.php file and the immature mouse configuration concept.
 		$this->objectKey	= $objectKey;
-		$this->settings		=& mouse\Hole::$settings[$this->objectKey];
+		$this->settings		=& mouse\hole::$settings[$this->objectKey];
 
 		if (!defined('MEDIAWIKI')) {
 			define('MEDIAWIKI', 'WTF');
@@ -41,8 +41,8 @@ class Mediawiki {
 		if (!defined('SETTINGS_ONLY')) {
 			define('SETTINGS_ONLY', 'WTF');
 		}
-		require(mouse\Hole::$settings['file']);
-		mouse\Hole::$settings['DB'] = array(
+		require(mouse\hole::$settings['file']);
+		mouse\hole::$settings['DB'] = array(
 											'server'		=> $wgDBserver,
 											'port'			=> $wgDBport,
 											'database'		=> $wgDBname,
@@ -52,10 +52,10 @@ class Mediawiki {
 										);
 
 		if ($wgMetaNamespace) {
-			mouse\Hole::$settings['wiki']['wiki_name']		= $wgSitename;
-			mouse\Hole::$settings['wiki']['wiki_domain']		= str_ireplace(array('http://', 'https://'), '', $wgServer);
-			mouse\Hole::$settings['wiki']['wiki_meta_name']	= $wgMetaNamespace;
-			mouse\Hole::$settings['wiki']['wiki_database']	= $wgDBname;
+			mouse\hole::$settings['wiki']['wiki_name']		= $wgSitename;
+			mouse\hole::$settings['wiki']['wiki_domain']		= str_ireplace(array('http://', 'https://'), '', $wgServer);
+			mouse\hole::$settings['wiki']['wiki_meta_name']	= $wgMetaNamespace;
+			mouse\hole::$settings['wiki']['wiki_database']	= $wgDBname;
 		} else {
 			throw new \Exception('MediaWiki Meta Name $wgMetaNamespace is not defined.  Class '.__CLASS__.' requires this to continue.');
 		}
@@ -65,26 +65,26 @@ class Mediawiki {
 			foreach ($wgMemCachedServers as $server) {
 				if (is_string($server)) {
 					list($host, $port) = explode(':', $server);
-					mouse\Hole::$settings['memcache']['servers'][] = array(
+					mouse\hole::$settings['memcache']['servers'][] = array(
 																			'host'	=> $host,
 																			'port'	=> $port
 																		);
 				} elseif (is_array($server)) {
 					list($host, $port) = explode(':', $server[0]);
-					mouse\Hole::$settings['memcache']['servers'][] = array(
+					mouse\hole::$settings['memcache']['servers'][] = array(
 																			'host'		=> $host,
 																			'port'		=> $port,
 																			'weight'	=> $server[1]
 																		);
 				}
 			}
-			mouse\Hole::$settings['memcache']['use_memcache']	= true;
+			mouse\hole::$settings['memcache']['use_memcache']	= true;
 		}
 
 		if ($redisCachingServers) {
-			(is_array(mouse\Hole::$settings['redis']['servers']) ? mouse\Hole::$settings['redis']['servers'] = array_merge(mouse\Hole::$settings['redis']['servers'], $redisCachingServers) : mouse\Hole::$settings['redis']['servers'] = $redisCachingServers);
-			mouse\Hole::$settings['redis']['prefix']		= MASTER_WIKI_META.':';
-			mouse\Hole::$settings['redis']['use_redis']	= true;
+			(is_array(mouse\hole::$settings['redis']['servers']) ? mouse\hole::$settings['redis']['servers'] = array_merge(mouse\hole::$settings['redis']['servers'], $redisCachingServers) : mouse\hole::$settings['redis']['servers'] = $redisCachingServers);
+			mouse\hole::$settings['redis']['prefix']		= MASTER_WIKI_META.':';
+			mouse\hole::$settings['redis']['use_redis']	= true;
 		}
 	}
 }

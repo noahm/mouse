@@ -34,11 +34,11 @@ class mouseTest {
 	 */
 	static private function loadMouse() {
 		if (self::$initialized === false) {
-			if (!class_exists('\mouse\Hole')) {
+			if (!class_exists('\mouse\hole')) {
 				require_once(dirname(__DIR__).'/mouse.php');
 			}
 			//The mouseConfigMediawiki module has to load before any modules that require configuration data from the LocalSettings file.
-			self::$mouse = \mouse\Hole::instance(['output' => 'mouse\output\output', 'request' => 'mouse\request\http', 'DB' => 'mouse\database\mysqli', 'redis' => 'mouse\cache\redis'], $settings);
+			self::$mouse = \mouse\hole::instance(['output' => 'mouse\output\output', 'request' => 'mouse\request\http', 'DB' => 'mouse\database\mysqli', 'redis' => 'mouse\cache\redis'], $settings);
 
 			self::$initialized = true;
 		}
