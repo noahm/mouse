@@ -12,7 +12,7 @@
  * @version		2.0
  *
 **/
-namespace mouse\Database;
+namespace mouse\database;
 use mouse;
 
 class Mysqli {

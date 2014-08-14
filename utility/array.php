@@ -12,7 +12,7 @@
  * @version		2.0
  *
 **/
-namespace mouse\Utility;
+namespace mouse\utility;
 use mouse;
 
 class Array {

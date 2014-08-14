@@ -12,7 +12,7 @@
  * @version		2.0
  *
 **/
-namespace mouse\Config;
+namespace mouse\config;
 use mouse;
 
 class File {

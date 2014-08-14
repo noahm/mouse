@@ -38,7 +38,7 @@ class mouseTest {
 				require_once(dirname(__DIR__).'/mouse.php');
 			}
 			//The mouseConfigMediawiki module has to load before any modules that require configuration data from the LocalSettings file.
-			self::$mouse = \mouse\Hole::instance(['output' => 'mouse\Output\Output', 'request' => 'mouse\Request\Http', 'DB' => 'mouse\Database\Mysqli', 'redis' => 'mouse\Cache\Redis'], $settings);
+			self::$mouse = \mouse\Hole::instance(['output' => 'mouse\output\output', 'request' => 'mouse\request\http', 'DB' => 'mouse\database\mysqli', 'redis' => 'mouse\cache\redis'], $settings);
 
 			self::$initialized = true;
 		}

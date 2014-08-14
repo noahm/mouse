@@ -12,7 +12,7 @@
  * @version		2.0
  *
 **/
-namespace mouse\Transfer;
+namespace mouse\transfer;
 use mouse;
 
 class Curl {

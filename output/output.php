@@ -12,7 +12,7 @@
  * @version		2.0
  *
 **/
-namespace mouse\Output;
+namespace mouse\output;
 use mouse;
 
 class Output {

@@ -12,7 +12,7 @@
  * @version		2.0
  *
 **/
-namespace mouse\Cache;
+namespace mouse\cache;
 use mouse;
 
 class Memcache extends \Memcache {

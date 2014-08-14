@@ -49,14 +49,14 @@ class Hole {
 	 *
 	 * @var		string
 	 */
-	public static $version = '2.0';
+	public static $version = '3.0';
 
 	/**
 	 * Mouse Framework Iteration
 	 *
 	 * @var		string
 	 */
-	public static $iteration = '20011';
+	public static $iteration = '30000';
 
 	/**
 	 * Constructor
@@ -177,18 +177,25 @@ class Hole {
 	 * @return	void
 	 */
 	public function autoloadClass($classname) {
-		$file = MOUSE_DIR.strtolower(str_replace('\\', DIRECTORY_SEPARATOR, str_replace('mouse', '', $classname))).'.php';
-		$_file = MOUSE_DIR.preg_replace_callback(
-			'#([A-Z])#s',
-			function ($match) {
-				return DIRECTORY_SEPARATOR.strtolower($match[1]);
-			},
-			str_replace('mouse', '', $classname)
-		).'.php';
+		$file = MOUSE_DIR.str_replace('\\', DIRECTORY_SEPARATOR, str_replace('mouse', '', $classname)).'.php';
+
+		if (!is_file($file)) {
+			//Attempt to load through legacy naming fallback.  If successful, toss an E_USER_WARNING.
+			$file = MOUSE_DIR.preg_replace_callback(
+				'#([A-Z])#s',
+				function ($match) {
+					return DIRECTORY_SEPARATOR.strtolower($match[1]);
+				},
+				str_replace('mouse', '', $classname)
+			).'.php';
+			if (is_file($file)) {
+				throw new \Exception(__CLASS__.": Legacy style class name '{$classname}' detected.  Please update this class name statement to use the new namespaced format.");
+			}
+		}
 		if (is_file($file)) {
 			require_once($file);
 		} else {
-			trigger_error(__CLASS__.": Class {$classname} not found at {$file}.", E_USER_WARNING);
+			throw new \Exception(__CLASS__.": Class file for {$classname} not found at {$file}.");
 		}
 	}
 

@@ -12,7 +12,7 @@
  * @version		2.0
  *
 **/
-namespace mouse\Request;
+namespace mouse\request;
 use mouse;
 
 class Http {
