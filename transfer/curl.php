@@ -12,8 +12,10 @@
  * @version		2.0
  *
 **/
+namespace mouse\Transfer;
+use mouse;
 
-class mouseTransferCurl {
+class Curl {
 	/**
 	 * Object Key
 	 *
@@ -37,7 +39,7 @@ class mouseTransferCurl {
 	 */
 	public function __construct($objectKey = 'curl') {
 		$this->objectKey	= $objectKey;
-		$this->settings		=& mouseHole::$settings[$this->objectKey];
+		$this->settings		=& mouse\Hole::$settings[$this->objectKey];
 	}
 
 	/**
@@ -64,7 +66,7 @@ class mouseTransferCurl {
 		if ($this->settings['useragent']) {
 			$useragent = $this->settings['useragent'];
 		} else {
-			$useragent = "Mouse Framework/".mouseHole::$version;
+			$useragent = "Mouse Framework/".mouse\Hole::$version;
 		}
 
 		$dateTime = gmdate("D, d M Y H:i:s", time())." GMT";

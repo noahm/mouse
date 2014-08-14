@@ -12,8 +12,10 @@
  * @version		2.0
  *
 **/
+namespace mouse\Request;
+use mouse;
 
-class mouseRequestHttp {
+class Http {
 	/**
 	 * Object Key
 	 *
@@ -30,7 +32,7 @@ class mouseRequestHttp {
 	 */
 	public function __construct($objectKey = 'http') {
 		$this->objectKey	= $objectKey;
-		$this->settings		=& mouseHole::$settings[$this->objectKey];
+		$this->settings		=& mouse\Hole::$settings[$this->objectKey];
 
 		foreach ($_GET as $key => $value) {
 			$this->get[$key] = $this->cleanRequestValue($value);

@@ -12,8 +12,10 @@
  * @version		2.0
  *
 **/
+namespace mouse\Cache;
+use mouse;
 
-class mouseCacheRedis {
+class Redis {
 	/**
 	 * Redis Instance
 	 *
@@ -51,7 +53,7 @@ class mouseCacheRedis {
 	 */
 	public function __construct($objectKey = 'redis') {
 		$this->objectKey	= $objectKey;
-		$this->settings		=& mouseHole::$settings[$this->objectKey];
+		$this->settings		=& mouse\Hole::$settings[$this->objectKey];
 
 		//Automatic enable.
 		if ($this->settings['use_redis']) {
@@ -73,16 +75,16 @@ class mouseCacheRedis {
 		if ($this->redisInitialized) {
 			try {
 				return call_user_func_array(array($this->redis, $function), $arguments);
-			} catch (Predis\Connection\ConnectionException $e) {
+			} catch (\Predis\Connection\ConnectionException $e) {
 				// attempt to re-establish a connection before trashing the redis object completely
 				if (!$this->redis->isConnected() && $this->redis->connect() && !$this->redis->isConnected()) {
 					$this->redisInitialized = false;
 					$this->redis = null;
 				}
-			} catch (Predis\NotSupportedException $e) {
+			} catch (\Predis\NotSupportedException $e) {
 				$this->redisInitialized = false;
 				$this->redis = null;
-			} catch (Exception $e) {
+			} catch (\Exception $e) {
 				$this->redisInitialized = false;
 				$this->redis = null;
 			}
@@ -102,19 +104,19 @@ class mouseCacheRedis {
 
 		if ($this->settings['use_redis'] == 1 && $this->settings['servers']) {
 			include_once('Predis/Autoloader.php');
-			Predis\Autoloader::register();
-			if (class_exists('Predis\Client')) {
+			\Predis\Autoloader::register();
+			if (class_exists('\Predis\Client')) {
 				$options = [];
 				if ($this->settings['prefix']) {
 					$options['prefix'] = $this->settings['prefix'];
 				}
-				$this->redis = new Predis\Client($this->settings['servers'], $options);
+				$this->redis = new \Predis\Client($this->settings['servers'], $options);
 
 				try {
 					$this->redis->connect();
-				} catch (Predis\Connection\ConnectionException $e) {
+				} catch (\Predis\Connection\ConnectionException $e) {
 					$this->redis = null;
-				} catch (Exception $e) {
+				} catch (\Exception $e) {
 					$this->redis = null;
 				}
 

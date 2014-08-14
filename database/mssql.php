@@ -12,8 +12,10 @@
  * @version		2.0
  *
 **/
+namespace mouse\Database;
+use mouse;
 
-class mouseDatabaseMssql {
+class Mssql {
 	/**
 	 * MsSQL Link
 	 *
@@ -37,7 +39,7 @@ class mouseDatabaseMssql {
 	 */
 	public function __construct($objectKey = 'DB') {
 		$this->objectKey	= $objectKey;
-		$this->settings		=& mouseHole::$settings[$this->objectKey];
+		$this->settings		=& mouse\Hole::$settings[$this->objectKey];
 
 		//Automatic enable.
 		if ($this->settings['use_database']) {
@@ -358,7 +360,7 @@ class mouseDatabaseMssql {
 	 * @return	void
 	 */
 	public function dbError() {
-		throw new Exception(mssql_get_last_message()."\n".$this->generatedQuery."\n");
+		throw new \Exception(mssql_get_last_message()."\n".$this->generatedQuery."\n");
 	}
 
 	/**

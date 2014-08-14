@@ -12,8 +12,10 @@
  * @version		2.0
  *
 **/
+namespace mouse\Database;
+use mouse;
 
-class mouseDatabaseMysqli {
+class Mysqli {
 	/**
 	 * MySQLi Instance
 	 *
@@ -51,7 +53,7 @@ class mouseDatabaseMysqli {
 	 */
 	public function __construct($objectKey = 'DB') {
 		$this->objectKey	= $objectKey;
-		$this->settings		=& mouseHole::$settings[$this->objectKey];
+		$this->settings		=& mouse\Hole::$settings[$this->objectKey];
 
 		if ($this->settings['prefix'] === null) {
 			$this->settings['prefix'] = '';
@@ -461,7 +463,7 @@ class mouseDatabaseMysqli {
 	public function dbError() {
 		$errno = ($this->mysqli->connect_errno ? $this->mysqli->connect_errno : $this->mysqli->errno);
 		$error = ($this->mysqli->connect_error ? $this->mysqli->connect_error : $this->mysqli->error);
-		throw new Exception('['.$errno.'] '.$error."\n".(PHP_SAPI == 'cli' ? $this->generatedQuery."\n" : ''));
+		throw new \Exception('['.$errno.'] '.$error."\n".(PHP_SAPI == 'cli' ? $this->generatedQuery."\n" : ''));
 	}
 
 	/**

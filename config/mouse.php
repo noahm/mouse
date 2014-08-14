@@ -12,8 +12,10 @@
  * @version		2.0
  *
 **/
+namespace mouse\Config;
+use mouse;
 
-class mouseConfigMouse {
+class Mouse {
 	/**
 	 * Object Key
 	 *

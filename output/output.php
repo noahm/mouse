@@ -12,8 +12,10 @@
  * @version		2.0
  *
 **/
+namespace mouse\Output;
+use mouse;
 
-class mouseOutputOutput {
+class Output {
 	/**
 	 * Output HTML
 	 *
@@ -79,7 +81,7 @@ class mouseOutputOutput {
 	 */
 	public function __construct($objectKey = 'http') {
 		$this->objectKey	= $objectKey;
-		$this->settings		=& mouseHole::$settings[$this->objectKey];
+		$this->settings		=& mouse\Hole::$settings[$this->objectKey];
 	}
 
 	/**

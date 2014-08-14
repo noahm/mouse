@@ -13,7 +13,9 @@
  *
 **/
 
-class mouseHole {
+namespace mouse;
+
+class Hole {
 	/**
 	 * Mouse Instance
 	 *
@@ -118,7 +120,7 @@ class mouseHole {
 		if (count($classes)) {
 			foreach ($classes as $key => $className) {
 				if (in_array($key, self::$reservedKeys)) {
-					throw new Exception("Mouse modules can not be assigned to certain reserved key words.  Attempted to load: {$key} => {$className}");
+					throw new \Exception("Mouse modules can not be assigned to certain reserved key words.  Attempted to load: {$key} => {$className}");
 				}
 				if (!property_exists($this, $key) || !$this->$key instanceof $className) {
 					$this->$key = new $className($key);
@@ -175,9 +177,18 @@ class mouseHole {
 	 * @return	void
 	 */
 	public function autoloadClass($classname) {
-		$file = MOUSE_DIR.preg_replace_callback('#([A-Z])#s', function ($match) { return DIRECTORY_SEPARATOR.strtolower($match[1]); }, str_replace('mouse', '', $classname)).'.php';
+		$file = MOUSE_DIR.strtolower(str_replace('\\', DIRECTORY_SEPARATOR, str_replace('mouse', '', $classname))).'.php';
+		$_file = MOUSE_DIR.preg_replace_callback(
+			'#([A-Z])#s',
+			function ($match) {
+				return DIRECTORY_SEPARATOR.strtolower($match[1]);
+			},
+			str_replace('mouse', '', $classname)
+		).'.php';
 		if (is_file($file)) {
 			require_once($file);
+		} else {
+			trigger_error(__CLASS__.": Class {$classname} not found at {$file}.", E_USER_WARNING);
 		}
 	}
 
@@ -187,7 +198,7 @@ class mouseHole {
 	 * @access	public
 	 * @param	array	[Optional] Array of object keys to classes to autoload.
 	 * @param	array	[Optional] Array of settings.
-	 * @return	object	mouseHole
+	 * @return	object	Hole
 	 */
 	static public function instance($classes = [], $settings = []) {
 		if (!self::$instance) {

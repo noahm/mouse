@@ -12,8 +12,10 @@
  * @version		2.0
  *
 **/
+namespace mouse\Cache;
+use mouse;
 
-class mouseCacheMemcache extends Memcache {
+class Memcache extends \Memcache {
 	/**
 	 * Memory cached Memcache results.
 	 *
@@ -45,7 +47,7 @@ class mouseCacheMemcache extends Memcache {
 	 */
 	public function __construct($objectKey = 'memcache') {
 		$this->objectKey	= $objectKey;
-		$this->settings		=& mouseHole::$settings[$this->objectKey];
+		$this->settings		=& mouse\Hole::$settings[$this->objectKey];
 
 		//Automatic enable.
 		if ($this->settings['use_memcache']) {

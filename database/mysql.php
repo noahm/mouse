@@ -12,8 +12,10 @@
  * @version		2.0
  *
 **/
+namespace mouse\Database;
+use mouse;
 
-class mouseDatabaseMysql {
+class Mysql {
 	/**
 	 * MySQL Link
 	 *
@@ -38,7 +40,7 @@ class mouseDatabaseMysql {
 	 */
 	public function __construct($objectKey = 'DB') {
 		$this->objectKey	= $objectKey;
-		$this->settings		=& mouseHole::$settings[$this->objectKey];
+		$this->settings		=& mouse\Hole::$settings[$this->objectKey];
 
 		//Automatic enable.
 		if ($this->settings['use_database']) {
@@ -358,7 +360,7 @@ class mouseDatabaseMysql {
 	}
 
 	public function dbError() {
-		throw new Exception(mysql_error()."\n".$this->generatedQuery."\n");
+		throw new \Exception(mysql_error()."\n".$this->generatedQuery."\n");
 	}
 
 	/**

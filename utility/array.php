@@ -12,8 +12,10 @@
  * @version		2.0
  *
 **/
+namespace mouse\Utility;
+use mouse;
 
-class mouseUtilityArray {
+class Array {
 	/**
 	 * Object Key
 	 *
@@ -30,7 +32,7 @@ class mouseUtilityArray {
 	 */
 	public function __construct($objectKey = 'array') {
 		$this->objectKey	= $objectKey;
-		$this->settings		=& mouseHole::$settings[$this->objectKey];
+		$this->settings		=& mouse\Hole::$settings[$this->objectKey];
 	}
 
 	/**
