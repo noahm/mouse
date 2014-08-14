@@ -8,14 +8,13 @@
  * @copyright	(c) 2010 - 2014 NoName Studios
  * @license		All Rights Reserved
  * @package		Mouse Framework
- * @link		http://www.nonamestudios.com/
- * @version		2.0
+ * @link		https://bitbucket.org/ashlawnk/mouse
  *
 **/
 namespace mouse\config;
 use mouse;
 
-class File {
+class file {
 	/**
 	 * Object Key
 	 *

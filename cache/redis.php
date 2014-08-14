@@ -8,14 +8,13 @@
  * @copyright	(c) 2010 - 2014 NoName Studios
  * @license		All Rights Reserved
  * @package		Mouse Framework
- * @link		http://www.nonamestudios.com/
- * @version		2.0
+ * @link		https://bitbucket.org/ashlawnk/mouse
  *
 **/
 namespace mouse\cache;
 use mouse;
 
-class Redis {
+class redis {
 	/**
 	 * Redis Instance
 	 *
@@ -48,7 +47,7 @@ class Redis {
 	 * Constructor
 	 *
 	 * @access	public
-	 * @param	[Optional] Object key used to initialize the object to mouse.  Also serves as the settings array key.
+	 * @param	string	[Optional] Object key used to initialize the object to mouse.  Also serves as the settings array key.
 	 * @return	void
 	 */
 	public function __construct($objectKey = 'redis') {

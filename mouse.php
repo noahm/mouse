@@ -8,8 +8,7 @@
  * @copyright	(c) 2010 - 2014 NoName Studios
  * @license		All Rights Reserved
  * @package		Mouse Framework
- * @link		http://www.nonamestudios.com/
- * @version		2.0
+ * @link		https://bitbucket.org/ashlawnk/mouse
  *
 **/
 
@@ -68,7 +67,7 @@ class hole {
 	 */
 	private function __construct($classes = [], $settings = []) {
 		//Define a constant mouse hole.
-		define('MOUSE_DIR', dirname(__FILE__));
+		define('MOUSE_DIR', __DIR__);
 
 		spl_autoload_register([$this, 'autoloadClass'], true, false);
 
