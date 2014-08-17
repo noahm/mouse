@@ -44,6 +44,20 @@ abstract class module {
 	private $connected = false;
 
 	/**
+	 * Default Host
+	 *
+	 * @var		string
+	 */
+	protected $defaultHost = '127.0.0.1';
+
+	/**
+	 * Default Port
+	 *
+	 * @var		integer
+	 */
+	protected $defaultPort = 3306;
+
+	/**
 	 * Constructor
 	 *
 	 * @access	public
@@ -84,7 +98,13 @@ abstract class module {
 			unset($this->mysqli);
 		}
 		$this->mysqli = new mysqli();
-		$this->connect($this->settings['server'], $this->settings['user'], $this->settings['pass'], $this->settings['database'], ($this->settings['port'] ? $this->settings['port'] : 3306));
+		$this->connect(
+			($this->settings['server'] ? $this->settings['server'] : $this->defaultHost),
+			$this->settings['user'],
+			$this->settings['pass'],
+			$this->settings['database'],
+			($this->settings['port'] ? $this->settings['port'] : $this->defaultPort)
+		);
 		$this->query("SET NAMES utf8");
 		return true;
 	}
@@ -98,16 +118,9 @@ abstract class module {
 	 * @param	string	Password
 	 * @param	string	Database name
 	 * @param	integer	Server port
-	 * @return	void
+	 * @return	boolean	Success
 	 */
-	public function connect($server, $user, $pass, $db, $port) {
-		$success = @$this->mysqli->real_connect(($this->settings['persistent'] ? 'p:' : null).$server, $user, $pass, $db, $port);
-		if (!$success || $this->mysqli->connect_error) {
-			$this->dbError();
-		} else {
-			$this->connected = true;
-		}
-	}
+	abstract public function connect($server, $user, $pass, $db, $port);
 
 	/**
 	 * Disconnect from Database
@@ -377,18 +390,7 @@ abstract class module {
 	 * @param	string	Precompiled query
 	 * @return	mixed
 	 */
-	public function query($query) {
-		$result = $this->mysqli->query($query);
-		if ($result instanceof mysqli_result) {
-			$this->queryResult = $result;
-		}
-
-		if (!$result) {
-			$this->dbError();
-		}
-
-		return $result;
-	}
+	abstract public function query($query);
 
 	/**
 	 * Database Fetch Array
