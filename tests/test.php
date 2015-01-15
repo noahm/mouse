@@ -5,7 +5,7 @@
  *
  * @author		Alexia E. Smith
  * @copyright	(c) 2014 Curse Inc.
- * @license		All Rights Reserved
+ * @license		GNU General Public License v3
  * @package		MouseTest
  * @link		http://www.curse.com/
  *

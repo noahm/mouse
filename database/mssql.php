@@ -5,10 +5,9 @@
  * Mouse Database MsSQL - Interface to MsSQL Data, provides automatic connection setup, and object oriented database calls.
  *
  * @author 		Alexia E. Smith
- * @copyright	(c) 2010 - 2014 NoName Studios
- * @license		All Rights Reserved
+ * @license		GNU General Public License v3
  * @package		Mouse Framework
- * @link		https://bitbucket.org/ashlawnk/mouse
+ * @link		https://github.com/Alexia/mouse
  *
 **/
 namespace mouse\database;

@@ -5,10 +5,9 @@
  * Mouse Cache Memcache - Interface to Memcache, provides automatic connection setup.
  *
  * @author 		Alexia E. Smith
- * @copyright	(c) 2010 - 2014 NoName Studios
- * @license		All Rights Reserved
+ * @license		GNU General Public License v3
  * @package		Mouse Framework
- * @link		https://bitbucket.org/ashlawnk/mouse
+ * @link		https://github.com/Alexia/mouse
  *
 **/
 namespace mouse\cache;
