@@ -3,7 +3,7 @@ Small framework for bootstrapping programs whether they are simple command line 
 
 
 #Quick Start
-Mouse uses individual modules that can be instantiated onto the \mouse\hole singleton using an unique key.  Get the singleton of the mouse hole on to a variable or part of the class.  The instance() function takes two arrays as its parameters.  Each array consists of a module object key to data pair.
+Mouse uses individual modules that can be instantiated onto the \mouse\hole singleton using an unique key.  The first step is to get the singleton of the mouse hole on to a variable or part of the class.  The instance() function takes two arrays as its parameters.  Each array consists of a module object key to data pair.
 
 	/*
 	 * Example #1
