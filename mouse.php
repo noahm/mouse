@@ -40,7 +40,7 @@ class hole {
 	 *
 	 * @var		array
 	 */
-	private $loadedClasses = [];
+	private $loadedModules = [];
 
 	/**
 	 * Mouse Framework Version
@@ -64,7 +64,7 @@ class hole {
 	 * @param	array	[Optional] Array of settings.
 	 * @return	void
 	 */
-	private function __construct($classes = [], $settings = []) {
+	private function __construct($modules = [], $settings = []) {
 		//Define a constant mouse hole.
 		define('MOUSE_DIR', __DIR__);
 
@@ -75,8 +75,8 @@ class hole {
 			$this->loadSettings($settings);
 		}
 
-		if (count($classes)) {
-			$this->loadClasses($classes);
+		if (count($modules)) {
+			$this->loadModules($modules);
 		}
 	}
 
@@ -114,15 +114,15 @@ class hole {
 	 * @param	array	Array of object keys to classes to autoload.
 	 * @return	void
 	 */
-	public function loadClasses($classes) {
-		if (count($classes)) {
-			foreach ($classes as $key => $className) {
+	public function loadModules($modules) {
+		if (count($modules)) {
+			foreach ($modules as $key => $moduleName) {
 				if (in_array($key, self::$reservedKeys)) {
-					throw new \Exception("Mouse modules can not be assigned to certain reserved key words.  Attempted to load: {$key} => {$className}");
+					throw new \Exception("Mouse modules can not be assigned to certain reserved key words.  Attempted to load: {$key} => {$moduleName}");
 				}
-				if (!property_exists($this, $key) || !$this->$key instanceof $className) {
-					$this->$key = new $className($key);
-					$this->loadedClasses[$key] = $className;
+				if (!property_exists($this, $key) || !$this->$key instanceof $moduleName) {
+					$this->$key = new $moduleName($key);
+					$this->loadedModules[$key] = $moduleName;
 				}
 			}
 		}
@@ -132,13 +132,13 @@ class hole {
 	 * Returns the first object key found for a class name.
 	 *
 	 * @access	public
-	 * @param	string	Class name to search for on $this->loadClasses.
+	 * @param	string	Module name to search for on $this->loadedModules.
 	 * @return	mixed	Object or Null
 	 */
-	public function getClassByName($className) {
-		$key = array_search($className, $this->loadedClasses);
+	public function getModuleByName($moduleName) {
+		$key = array_search($moduleName, $this->loadedModules);
 
-		if ($key && property_exists($this, $key) && $this->$key instanceof $className) {
+		if ($key && property_exists($this, $key) && $this->$key instanceof $moduleName) {
 			return $this->$key;
 		}
 		return null;
@@ -148,15 +148,15 @@ class hole {
 	 * Returns alls object keys found for a class name in an array.
 	 *
 	 * @access	public
-	 * @param	string	Class name to search for on $this->loadClasses.
+	 * @param	string	Class name to search for on $this->loadModules.
 	 * @return	mixed	Array of Objects or Null
 	 */
-	public function getClassesByName($className) {
-		$keys = array_keys($this->loadedClasses, $className);
+	public function getModulesByName($moduleName) {
+		$keys = array_keys($this->loadedModules, $moduleName);
 
 		if (count($keys)) {
 			foreach ($keys as $key) {
-				if ($key && property_exists($this, $key) && $this->$key instanceof $className) {
+				if ($key && property_exists($this, $key) && $this->$key instanceof $moduleName) {
 					$objects[] = $this->$key;
 				}
 			}
@@ -205,14 +205,14 @@ class hole {
 	 * @param	array	[Optional] Array of settings.
 	 * @return	object	hole
 	 */
-	static public function instance($classes = [], $settings = []) {
+	static public function instance($modules = [], $settings = []) {
 		if (!self::$instance) {
-			self::$instance = new self($classes, $settings);
+			self::$instance = new self($modules, $settings);
 		} else {
 			//Always load settings first.  Some classes require settings to be passed in first for successful setup.
 			self::$instance->loadSettings($settings);
 			//Reloop over provided classes to load an additional that may have been called on this pass.
-			self::$instance->loadClasses($classes);
+			self::$instance->loadModules($modules);
 		}
 
 		return self::$instance;
