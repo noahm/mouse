@@ -46,6 +46,26 @@ class http {
 	}
 
 	/**
+	 * Return the request method used.
+	 *
+	 * @access	public
+	 * @return	string	Request Method - Defaults to GET
+	 */
+	public function getRequestMethod() {
+		return (isset($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD'] : 'GET');
+	}
+
+	/**
+	 * Return if this request was a POST request.
+	 *
+	 * @access	public
+	 * @return	boolean
+	 */
+	public function wasPosted() {
+		return $this->getRequestMethod() == 'POST';
+	}
+
+	/**
 	 * Cleans Request Values for safe usage.
 	 *
 	 * @access	public
