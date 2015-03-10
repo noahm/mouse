@@ -40,14 +40,19 @@ class mouseConfigMediawiki {
 			define('SETTINGS_ONLY', 'WTF');
 		}
 		require(mouseHole::$settings['file']);
+		list($server, $port) = explode(':', $wgDBserver);
+		if (empty($port)) {
+			$port = $wgDBport;
+		}
 		mouseHole::$settings['DB'] = array(
-											'server'		=> $wgDBserver,
-											'port'			=> $wgDBport,
+											'server'		=> $server,
+											'port'			=> $port,
 											'database'		=> $wgDBname,
 											'user'			=> $wgDBuser,
 											'pass'			=> $wgDBpassword,
 											'use_database'	=> true
 										);
+		unset($server, $port);
 
 		if ($wgMetaNamespace) {
 			mouseHole::$settings['wiki']['wiki_name']		= $wgSitename;
