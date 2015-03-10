@@ -40,14 +40,19 @@ class mediawiki {
 			define('SETTINGS_ONLY', 'WTF');
 		}
 		require(mouse\hole::$settings['file']);
-		mouse\hole::$settings['DB'] = array(
-											'server'		=> $wgDBserver,
-											'port'			=> $wgDBport,
-											'database'		=> $wgDBname,
-											'user'			=> $wgDBuser,
-											'pass'			=> $wgDBpassword,
-											'use_database'	=> true
-										);
+		list($server, $port) = explode(':', $wgDBserver);
+		if (empty($port)) {
+			$port = $wgDBport;
+		}
+		mouse\hole::$settings['DB'] = [
+			'server'		=> $server,
+			'port'			=> $port,
+			'database'		=> $wgDBname,
+			'user'			=> $wgDBuser,
+			'pass'			=> $wgDBpassword,
+			'use_database'	=> true
+		];
+		unset($server, $port);
 
 		if ($wgMetaNamespace) {
 			mouse\hole::$settings['wiki']['wiki_name']		= $wgSitename;
